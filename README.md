@@ -5,6 +5,13 @@
 # impedance_control
 This package provides an impedance controller for the robot fingers in the SeaClear2.0 grapple. It consists of a base C++ library and a ROS2 wrapper for ease of integration with the rest of the system. A Docker container with all necessary dependencies is provided for plug-and-play deployment.
 
+## Usage
+To configure the impedance controller, modify the parameters in the `config.toml` file located in the `impedance_controller` package directory. The parameters include the
+- virtual stiffness matrix,
+- virtual damping matrix,
+- virtual inertia matrix, and
+- torque feedback gain.
+
 ## Documentation
 The implementation of the impedance controller is documented using Doxygen. To generate the documentation, navigate to the `docs/` directory and run:
 ```bash
