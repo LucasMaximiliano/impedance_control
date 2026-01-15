@@ -3,6 +3,14 @@
 
 #include <Eigen/Dense>
 
+//! \class ImpedanceControllerBase
+//! \brief Base C++ implementation of the impedance controller
+//! \details This class implements a Cartesian impedance controller for a 2-DOF
+//! planar robotic finger with revolute joints. The controller modulates the
+//! dynamic relationship between the end-effector and the environment,
+//! allowing for compliant interaction with the environment. It computes the
+//! commanded joint torques based on desired and measured Cartesian states,
+//! as well as measured joint torques.
 class ImpedanceControllerBase
 {
     public:
