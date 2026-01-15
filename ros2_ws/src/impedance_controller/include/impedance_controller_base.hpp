@@ -41,7 +41,7 @@ class ImpedanceControllerBase
         //!     \f]
         //! \return Commanded torque vector (2x1)
         //! \{
-        Eigen::Vector2d controlLaw();
+        void controlLaw();
         //! \}
         
     private:

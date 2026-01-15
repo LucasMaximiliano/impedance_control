@@ -43,7 +43,7 @@ Eigen::Vector2d ImpedanceControllerBase::getTorqueCommanded() const
     return torque_commanded_;
 }
 
-ImpedanceControllerBase::controlLaw()
+void ImpedanceControllerBase::controlLaw()
 {
     // Compute errors
     Eigen::Vector2d position_error     = cartesian_position_desired_     - cartesian_position_measured_;
@@ -56,12 +56,4 @@ ImpedanceControllerBase::controlLaw()
                          virtual_damping_matrix_ * velocity_error +
                          virtual_stiffness_matrix_ * position_error) +
                         force_feedback_gain_ * torque_measured_;
-
-    return torque_commanded_;
-}
-
-Eigen::Vector2d ImpedanceControllerBase::forward_kinematics(const Eigen::Vector2d& joint_positions)
-{
-    
-    return cartesian_positions;
 }
