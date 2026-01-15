@@ -3,6 +3,13 @@
 
 #include <Eigen/Dense>
 
+//! \namespace finger_kinematics
+//! \brief Functions for forward kinematics and Jacobian computations for a 2-DOF
+//! planar robotic finger with revolute joints.
+//! \details This namespace provides functions to compute the forward kinematics,
+//! Jacobian matrix, and time derivative of the Jacobian matrix for a 2-DOF
+//! planar robotic finger. The finger consists of two links connected by revolute
+//! joints, allowing it to operate in a 2D plane.
 namespace finger_kinematics {
     Eigen::Vector2d forward(
         const Eigen::Vector2d& joint_position,
