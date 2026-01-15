@@ -1,0 +1,20 @@
+# Virtual inertia matrix (2x2)
+virtual_inertia_matrix = [
+    [1.0, 0.0],
+    [0.0, 1.0]
+]
+
+# Virtual damping matrix (2x2)
+virtual_damping_matrix = [
+    [1.0, 0.0],
+    [0.0, 1.0]
+]
+
+# Virtual stiffness matrix (2x2)
+virtual_stiffness_matrix = [
+    [1.0, 0.0],
+    [0.0, 1.0]
+]
+
+# Force feedback gain (scalar)
+force_feedback_gain = 0.5
