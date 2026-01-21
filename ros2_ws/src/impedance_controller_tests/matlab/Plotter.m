@@ -11,7 +11,7 @@
 %   global variables so, this version is the result.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function Plotter(p)
+function Plotter(p, implementation_toggle)
 close all
 
 %Playback speed:
@@ -90,7 +90,7 @@ while (ishandle(f))
     vold = [z1(2),z1(4)];
    
     %Call RHS given old state
-    [zdot1, T1, T2] = FullDyn(tnew,z1,p);
+    [zdot1, T1, T2] = FullDyn(tnew,z1,p,implementation_toggle);
     vinter1 = [zdot1(1),zdot1(3)];
     ainter = [zdot1(2),zdot1(4)];
     

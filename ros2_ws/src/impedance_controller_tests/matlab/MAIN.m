@@ -27,6 +27,8 @@ clc; close all;
 clear all;
 
 rederive = false;
+
+implementation_toggle = true; % true = og code, false = my code
 %%%%%%%% System Parameters %%%%%%%%
 
 %Initial conditions:
@@ -42,7 +44,12 @@ p.d2 = p.l2/2; %Center of mass distance along link 2 from the fixed joint.
 p.I1 = 1/12*p.m1*p.l1^2; %Moment of inertia of link 1 about COM
 p.I2 = 1/12*p.m2*p.l2^2; %Moment of inertia of link 2 about COM
 
-endZ = ForwardKin(p.l1,p.l2,p.init(1),p.init(3));
+endZ = zeros(3,1);
+if implementation_toggle == true
+    endZ = ForwardKin(p.l1,p.l2,p.init(1),p.init(3));
+else
+    % TODO: Replace ForwardKin with my own implementation
+end
 x0 = endZ(1); %End effector initial position in world frame.
 y0 = endZ(2);
 p.Fx = 0;
@@ -69,6 +76,6 @@ end
 
 %%%%%%%% Integrate %%%%%%%%
 
-Plotter(p) %Integration is done in real time using symplectic euler like we did in the CS animation class.
+Plotter(p, implementation_toggle) %Integration is done in real time using symplectic euler like we did in the CS animation class.
 
 
