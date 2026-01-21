@@ -28,12 +28,7 @@ class ImpedanceControllerBase
         ~ImpedanceControllerBase();
         //! \}
 
-        //! \name Getters
-        //! \{
-        Eigen::Vector2d getTorqueCommanded() const;
-        //! \}
-
-        //! \name Control Law
+        //! \name computeImpedanceTorque
         //! \brief Computes the commanded torque based on the impedance control law
         //! \details The control law is defined below. For more details, refer to the developer notes.
         //!     \f[
@@ -41,7 +36,7 @@ class ImpedanceControllerBase
         //!     \f]
         //! \return Commanded torque vector (2x1)
         //! \{
-        void controlLaw();
+        Eigen::Vector2d computeImpedanceTorque();
         //! \}
         
     private:
@@ -62,11 +57,6 @@ class ImpedanceControllerBase
         Eigen::Vector2d cartesian_velocity_desired_;        //!< Desired velocity vector in Cartesian space (2x1)
         Eigen::Vector2d cartesian_acceleration_desired_;    //!< Desired acceleration vector in Cartesian space (2x1)
         Eigen::Vector2d joint_torque_measured_;             //!< Measured torque vector in joint space (2x1)
-        //! \}
-
-        //! \name Output Variables
-        //! \{
-        Eigen::Vector2d joint_torque_commanded_;    //!< Commanded torque vector in joint space (2x1)
         //! \}
 };
 

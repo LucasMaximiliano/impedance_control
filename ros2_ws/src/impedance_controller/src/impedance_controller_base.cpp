@@ -22,8 +22,7 @@ ImpedanceControllerBase::ImpedanceControllerBase(
       cartesian_torque_measured_(Eigen::Vector2d::Zero()),
       cartesian_position_desired_(Eigen::Vector2d::Zero()),
       cartesian_velocity_desired_(Eigen::Vector2d::Zero()),
-      cartesian_acceleration_desired_(Eigen::Vector2d::Zero()),
-      torque_commanded_(Eigen::Vector2d::Zero())
+      cartesian_acceleration_desired_(Eigen::Vector2d::Zero())
 {
     std::cout << "[ImpedanceControllerBase] Constructor called with..." << std::endl;
     std::cout << "  Virtual Inertia Matrix:\n" << virtual_inertia_matrix_ << std::endl;
@@ -38,12 +37,7 @@ ImpedanceControllerBase::~ImpedanceControllerBase()
     std::cout << "[ImpedanceControllerBase] Destructor called." << std::endl;
 }
 
-Eigen::Vector2d ImpedanceControllerBase::getTorqueCommanded() const
-{
-    return torque_commanded_;
-}
-
-void ImpedanceControllerBase::controlLaw()
+Eigen::Vector2d ImpedanceControllerBase::computeImpedanceTorque()
 {
     // Compute errors
     Eigen::Vector2d position_error     = cartesian_position_desired_     - cartesian_position_measured_;
@@ -51,9 +45,9 @@ void ImpedanceControllerBase::controlLaw()
     Eigen::Vector2d acceleration_error = cartesian_acceleration_desired_ - cartesian_acceleration_computed_;
 
     // Compute commanded torque using the impedance control law
-    torque_commanded_ = (1.0 + force_feedback_gain_) * 
-                        (virtual_inertia_matrix_ * acceleration_error +
-                         virtual_damping_matrix_ * velocity_error +
-                         virtual_stiffness_matrix_ * position_error) +
-                        force_feedback_gain_ * torque_measured_;
+    return torque_commanded_ = (1.0 + force_feedback_gain_) * 
+        (virtual_inertia_matrix_ * acceleration_error +
+        virtual_damping_matrix_ * velocity_error +
+        virtual_stiffness_matrix_ * position_error) +
+        force_feedback_gain_ * torque_measured_;
 }

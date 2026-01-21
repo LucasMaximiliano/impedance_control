@@ -1,3 +1,9 @@
+#########################################
+#                                       #
+#    IMPEDANCE CONTROLLER PARAMETERS    #
+#                                       #
+#########################################
+
 # Virtual inertia matrix (2x2)
 virtual_inertia_matrix = [
     [1.0, 0.0],
@@ -18,3 +24,18 @@ virtual_stiffness_matrix = [
 
 # Force feedback gain (scalar)
 force_feedback_gain = 0.5
+
+###############################
+#                             #
+#    MECHANICAL PARAMETERS    #
+#                             #
+###############################
+
+# Link mass vector (2x1)
+link_mass_vector = [1.0, 1.0]
+
+# Link length vector (2x1) in mm
+link_length_vector = [323.09, 381.40]
+
+# Distance to link CoM vector (2x1)
+dist_to_link_com_vector = [1.0, 1.0]
