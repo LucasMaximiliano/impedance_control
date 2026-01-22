@@ -25,6 +25,15 @@ namespace impedance_controller_params {
                                          stiffness_data[1][0], stiffness_data[1][1];
             
             force_feedback_gain_ = toml::find<double>(config, "force_feedback_gain");
+
+            auto mass_data = toml::find<std::vector<double>>(config, "link_mass_vector");
+            link_mass_vector_ << mass_data[0], mass_data[1];
+
+            auto length_data = toml::find<std::vector<double>>(config, "link_length_vector");
+            link_length_vector_ << length_data[0], length_data[1];
+
+            auto com_data = toml::find<std::vector<double>>(config, "dist_to_com_vector");
+            dist_to_com_vector_ << com_data[0], com_data[1];
         } catch (const std::exception& e) {
             throw std::runtime_error("Missing impedance controller parameter in TOML: " + std::string(e.what()));
         }
