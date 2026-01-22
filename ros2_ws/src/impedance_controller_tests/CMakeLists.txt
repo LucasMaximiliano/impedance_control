@@ -26,12 +26,14 @@ set_target_properties(forward_finger_kinematics_mex PROPERTIES
 )
 
 target_include_directories(forward_finger_kinematics_mex PRIVATE
-    ${Matlab_INCLUDE_DIRS}
+    "${Matlab_ROOT_DIR}/extern/include"
     ${PROJECT_SOURCE_DIR}/../impedance_controller/include
 )
 
 target_link_libraries(forward_finger_kinematics_mex
     "${Matlab_MEX_LIBRARY}"
+    "${Matlab_ROOT_DIR}/bin/maca64/libmx.dylib"
+    "${Matlab_ROOT_DIR}/bin/maca64/libmat.dylib"
     Eigen3::Eigen
 )
 
