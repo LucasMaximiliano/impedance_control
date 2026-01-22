@@ -5,18 +5,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ####################
-#                  #
 #    MATLAB MEX    #
-#                  #
 ####################
 
-# TODO: Update MATLAB path and OS architecture as needed
+# TODO: Update MATLAB path as needed (depends on installation location, version, and OS)
 set(Matlab_ROOT_DIR "/Applications/MATLAB_R2025b.app")
-set(Matlab_MEX_LIBRARY "/Applications/MATLAB_R2025b.app/bin/maca64/libmex.dylib")
+set(Matlab_MEX_LIBRARY "${Matlab_ROOT_DIR}/bin/maca64/libmex.dylib")
 set(Matlab_MEX_EXTENSION "mexmaca64")
-set(CMAKE_OSX_ARCHITECTURES "arm64")
 
-find_package(Matlab REQUIRED COMPONENTS MEX)
+find_package(Matlab REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 add_library(forward_finger_kinematics_mex SHARED
@@ -34,7 +31,7 @@ target_include_directories(forward_finger_kinematics_mex PRIVATE
 )
 
 target_link_libraries(forward_finger_kinematics_mex
-    Matlab::MEX
+    "${Matlab_MEX_LIBRARY}"
     Eigen3::Eigen
 )
 
