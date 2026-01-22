@@ -1,0 +1,2 @@
+- Sim not designed for docker container to avoid matlab install
+- Update MATLAB path and OS architecture as needed in CMakeLists.txt

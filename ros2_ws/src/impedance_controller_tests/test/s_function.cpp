@@ -1,3 +1,4 @@
+#include <chrono>
 #include <string>
 #include <Eigen/Dense>
 #include "impedance_controller_base.hpp"
@@ -26,6 +27,7 @@ Eigen::Vector2d s_function(
 {
     // Static initialization (runs only once on first call)
     static ImpedanceControllerBase* impedance_controller = nullptr;
+    static auto last_time = std::chrono::high_resolution_clock::now();
     
     if (impedance_controller == nullptr) {
         // TODO: Update the path to the TOML configuration file as needed
@@ -38,7 +40,15 @@ Eigen::Vector2d s_function(
             params.force_feedback_gain_);
     }
 
-    // TODO: Add actual acceleration computation
+    // Finite backward difference method to approximate acceleration numerically
+    // TODO: Make sure the velocity is given in m/s
+    auto current_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = current_time - last_time;
+    last_time = current_time;
+
+    impedance_controller->cartesian_acceleration_computed_ = (
+        cartesian_velocity_measured -
+        impedance_controller->cartesian_velocity_measured_) / elapsed.count();
 
     // Set input variables
     impedance_controller->cartesian_position_desired_ = cartesian_position_desired;
@@ -46,10 +56,8 @@ Eigen::Vector2d s_function(
     impedance_controller->cartesian_acceleration_desired_ = cartesian_acceleration_desired;
     impedance_controller->cartesian_position_measured_ = cartesian_position_measured;
     impedance_controller->cartesian_velocity_measured_ = cartesian_velocity_measured;
-    impedance_controller->cartesian_acceleration_computed_ = Eigen::Vector2d::Zero(); // Placeholder
     impedance_controller->joint_torque_measured_ = joint_torque_measured;
 
     // Compute the torque command
-    impedance_controller->controlLaw();
-    return impedance_controller->getTorqueCommanded();
+    return impedance_controller->computeImpedanceTorque();
 }

@@ -9,3 +9,11 @@ ALL other files -- Auto-written by deriverRelativeAngles.m
 
 ## Video
 https://www.youtube.com/watch?v=cmW7pRLut8A
+
+## Customization
+The original code has been modified to accommodate our custom impedance
+controller implementation. The following files have been added or
+modified:
+    - MAIN.m
+    - FullDyn.m
+    - CoordinateTransform.m

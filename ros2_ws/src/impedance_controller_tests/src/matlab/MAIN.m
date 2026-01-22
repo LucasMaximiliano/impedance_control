@@ -49,6 +49,7 @@ if implementation_toggle == true
     endZ = ForwardKin(p.l1,p.l2,p.init(1),p.init(3));
 else
     % TODO: Replace ForwardKin with my own implementation
+    [q1, q2] = CoordinateTransform(p.init(1),p.init(3));
 end
 x0 = endZ(1); %End effector initial position in world frame.
 y0 = endZ(2);
