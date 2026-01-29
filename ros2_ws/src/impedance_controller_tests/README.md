@@ -1,2 +1,3 @@
 - Sim not designed for docker container to avoid matlab install
 - Update MATLAB path and OS architecture as needed in CMakeLists.txt
+- Link to MATLAB documentation of sim: https://de.mathworks.com/matlabcentral/fileexchange/57853-impedance-control-for-a-2-link-robot-arm-user-interactive
