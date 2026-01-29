@@ -28,7 +28,7 @@ clear all;
 
 rederive = false;
 
-implementation_toggle = true; % true = og code, false = my code
+implementation_toggle = false; % true = og code, false = my code
 %%%%%%%% System Parameters %%%%%%%%
 
 %Initial conditions:
@@ -50,6 +50,7 @@ if implementation_toggle == true
 else
     % TODO: Replace ForwardKin with my own implementation
     [q1, q2] = CoordinateTransform(p.init(1),p.init(3));
+    endZ = forward_finger_kinematics_mex([q1, q2], [p.l1, p.l2]);
 end
 x0 = endZ(1); %End effector initial position in world frame.
 y0 = endZ(2);

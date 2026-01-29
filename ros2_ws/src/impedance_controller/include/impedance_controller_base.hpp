@@ -28,6 +28,36 @@ class ImpedanceControllerBase
         ~ImpedanceControllerBase();
         //! \}
 
+        //! \name Setters
+        //! \{
+        void setCartesianPositionMeasured(const Eigen::Vector2d& position) { cartesian_position_measured_ = position; }
+        void setCartesianVelocityMeasured(const Eigen::Vector2d& velocity) { cartesian_velocity_measured_ = velocity; }
+        void setCartesianAccelerationComputed(const Eigen::Vector2d& acceleration) { cartesian_acceleration_computed_ = acceleration; }
+        
+        void setCartesianPositionDesired(const Eigen::Vector2d& position) { cartesian_position_desired_ = position; }
+        void setCartesianVelocityDesired(const Eigen::Vector2d& velocity) { cartesian_velocity_desired_ = velocity; }
+        void setCartesianAccelerationDesired(const Eigen::Vector2d& acceleration) { cartesian_acceleration_desired_ = acceleration; }
+        
+        void setJointPositionMeasured(const Eigen::Vector2d& position) { joint_position_measured_ = position; }
+        void setJointVelocityMeasured(const Eigen::Vector2d& velocity) { joint_velocity_measured_ = velocity; }
+        void setJointTorqueMeasured(const Eigen::Vector2d& torque) { joint_torque_measured_ = torque; }
+        //! \}
+
+        //! \name Getters
+        //! \{
+        Eigen::Vector2d getCartesianPositionMeasured() const { return cartesian_position_measured_; }
+        Eigen::Vector2d getCartesianVelocityMeasured() const { return cartesian_velocity_measured_; }
+        Eigen::Vector2d getCartesianAccelerationComputed() const { return cartesian_acceleration_computed_; }
+        
+        Eigen::Vector2d getCartesianPositionDesired() const { return cartesian_position_desired_; }
+        Eigen::Vector2d getCartesianVelocityDesired() const { return cartesian_velocity_desired_; }
+        Eigen::Vector2d getCartesianAccelerationDesired() const { return cartesian_acceleration_desired_; }
+        
+        Eigen::Vector2d getJointPositionMeasured() const { return joint_position_measured_; }
+        Eigen::Vector2d getJointVelocityMeasured() const { return joint_velocity_measured_; }
+        Eigen::Vector2d getJointTorqueMeasured() const { return joint_torque_measured_; }
+        //! \}
+        
         //! \name computeImpedanceTorque
         //! \brief Computes the commanded torque based on the impedance control law
         //! \details The control law is defined below. For more details, refer to the developer notes.
@@ -53,10 +83,18 @@ class ImpedanceControllerBase
         Eigen::Vector2d cartesian_position_measured_;       //!< Measured position vector in Cartesian space (2x1)
         Eigen::Vector2d cartesian_velocity_measured_;       //!< Measured velocity vector in Cartesian space (2x1)
         Eigen::Vector2d cartesian_acceleration_computed_;   //!< Computed acceleration vector in Cartesian space (2x1)
+        
         Eigen::Vector2d cartesian_position_desired_;        //!< Desired position vector in Cartesian space (2x1)
         Eigen::Vector2d cartesian_velocity_desired_;        //!< Desired velocity vector in Cartesian space (2x1)
         Eigen::Vector2d cartesian_acceleration_desired_;    //!< Desired acceleration vector in Cartesian space (2x1)
+        
+        Eigen::Vector2d joint_position_measured_;           //!< Measured position vector in joint space (2x1)
+        Eigen::Vector2d joint_velocity_measured_;           //!< Measured velocity vector in joint space (2x1)
         Eigen::Vector2d joint_torque_measured_;             //!< Measured torque vector in joint space (2x1)
+        
+        Eigen::Vector2d joint_position_desired_;            //!< Desired position vector in joint space (2x1)
+        Eigen::Vector2d joint_velocity_desired_;            //!< Desired velocity vector in joint space (2x1)
+        Eigen::Vector2d joint_acceleration_desired_;        //!< Desired acceleration vector in joint space (2x1)
         //! \}
 };
 

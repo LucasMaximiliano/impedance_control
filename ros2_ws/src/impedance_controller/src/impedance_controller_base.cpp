@@ -19,7 +19,6 @@ ImpedanceControllerBase::ImpedanceControllerBase(
       joint_acceleration_desired_(Eigen::Vector2d::Zero()),
       cartesian_position_measured_(Eigen::Vector2d::Zero()),
       cartesian_velocity_measured_(Eigen::Vector2d::Zero()),
-      cartesian_torque_measured_(Eigen::Vector2d::Zero()),
       cartesian_position_desired_(Eigen::Vector2d::Zero()),
       cartesian_velocity_desired_(Eigen::Vector2d::Zero()),
       cartesian_acceleration_desired_(Eigen::Vector2d::Zero())
@@ -45,9 +44,9 @@ Eigen::Vector2d ImpedanceControllerBase::computeImpedanceTorque()
     Eigen::Vector2d acceleration_error = cartesian_acceleration_desired_ - cartesian_acceleration_computed_;
 
     // Compute commanded torque using the impedance control law
-    return torque_commanded_ = (1.0 + force_feedback_gain_) * 
+    return (1.0 + force_feedback_gain_) * 
         (virtual_inertia_matrix_ * acceleration_error +
         virtual_damping_matrix_ * velocity_error +
         virtual_stiffness_matrix_ * position_error) +
-        force_feedback_gain_ * torque_measured_;
+        force_feedback_gain_ * joint_torque_measured_;
 }
