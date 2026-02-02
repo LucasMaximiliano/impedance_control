@@ -15,7 +15,7 @@
 //! \param dist_to_link_com_vector Vector containing the distances from each joint to the center of mass of the respective link (2x1)
 //! \param joint_position Vector containing the current joint positions (2x1)
 //! \return Gravity compensation torque vector (2x1)
-Eigen::Vector2d computeGravityTorque(
+inline Eigen::Vector2d computeGravityTorque(
     const Eigen::Vector2d& link_mass_vector,
     const Eigen::Vector2d& link_length_vector,
     const Eigen::Vector2d& dist_to_link_com_vector,

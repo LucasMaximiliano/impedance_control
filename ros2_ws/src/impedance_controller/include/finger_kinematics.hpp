@@ -11,7 +11,7 @@
 //! planar robotic finger. The finger consists of two links connected by revolute
 //! joints, allowing it to operate in a 2D plane.
 namespace finger_kinematics {
-    Eigen::Vector2d forward(
+    inline Eigen::Vector2d forward(
         const Eigen::Vector2d& joint_position,
         const Eigen::Vector2d& link_length)
     {
@@ -27,7 +27,7 @@ namespace finger_kinematics {
         return Eigen::Vector2d(x, y);
     }
 
-    Eigen::Matrix2d jacobian(
+    inline Eigen::Matrix2d jacobian(
         const Eigen::Vector2d& joint_position,
         const Eigen::Vector2d& link_length)
     {
@@ -49,7 +49,7 @@ namespace finger_kinematics {
         return J;
     }
 
-    Eigen::Matrix2d dotJacobian(
+    inline Eigen::Matrix2d dotJacobian(
         const Eigen::Vector2d& joint_position,
         const Eigen::Vector2d& joint_velocity,
         const Eigen::Vector2d& link_length)
