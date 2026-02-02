@@ -28,7 +28,9 @@ clear all;
 
 rederive = false;
 
+% TODO: Update the toggle and the path to binaries as needed
 implementation_toggle = false; % true = og code, false = my code
+addpath(['../../build/']);
 %%%%%%%% System Parameters %%%%%%%%
 
 %Initial conditions:
