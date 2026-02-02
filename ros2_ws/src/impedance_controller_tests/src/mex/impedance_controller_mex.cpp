@@ -9,9 +9,10 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
     // Check number of inputs and outputs
-    if (nrhs != 8) {
-        mexErrMsgTxt("Usage: impedance_torque_cmd = impedance_controller_mex(gain(x4), link_length(x2), "
-            "joint_position(x2), joint_velocity(x2), cartesian_target_position(x2), cartesian_target_velocity(x2), "
+    if (nrhs != 10) {
+        mexErrMsgTxt("Usage: impedance_torque_cmd = impedance_controller_mex(gain(x4), link_mass(x2), "
+            "link_length(x2), link_com_distance(x2), joint_position(x2), joint_velocity(x2), "
+            "cartesian_target_position(x2), cartesian_target_velocity(x2), "
             "cartesian_target_acceleration(x2), torque_feedback(x2));");
     }
     if (nlhs != 2) {
@@ -26,22 +27,28 @@ void mexFunction(int nlhs, mxArray *plhs[],
         !mxIsDouble(prhs[4]) || mxGetNumberOfElements(prhs[4]) != 2 ||
         !mxIsDouble(prhs[5]) || mxGetNumberOfElements(prhs[5]) != 2 ||
         !mxIsDouble(prhs[6]) || mxGetNumberOfElements(prhs[6]) != 2 ||
-        !mxIsDouble(prhs[7]) || mxGetNumberOfElements(prhs[7]) != 2) {
+        !mxIsDouble(prhs[7]) || mxGetNumberOfElements(prhs[7]) != 2 ||
+        !mxIsDouble(prhs[8]) || mxGetNumberOfElements(prhs[8]) != 2 ||
+        !mxIsDouble(prhs[9]) || mxGetNumberOfElements(prhs[9]) != 2) {
         mexErrMsgTxt("gain must be a 4x1 double vector and the remaining arguments 2x1 double vectors.");
     }
 
     // Read inputs
     double* k_ptr   = mxGetPr(prhs[0]);
-    double* l_ptr   = mxGetPr(prhs[1]);
-    double* q_ptr   = mxGetPr(prhs[2]);
-    double* qd_ptr  = mxGetPr(prhs[3]);
-    double* x_ptr   = mxGetPr(prhs[4]);
-    double* xd_ptr  = mxGetPr(prhs[5]);
-    double* xdd_ptr = mxGetPr(prhs[6]);
-    double* tau_ptr = mxGetPr(prhs[7]);
+    double* m_ptr   = mxGetPr(prhs[1]);
+    double* l_ptr   = mxGetPr(prhs[2]);
+    double* d_ptr   = mxGetPr(prhs[3]);
+    double* q_ptr   = mxGetPr(prhs[4]);
+    double* qd_ptr  = mxGetPr(prhs[5]);
+    double* x_ptr   = mxGetPr(prhs[6]);
+    double* xd_ptr  = mxGetPr(prhs[7]);
+    double* xdd_ptr = mxGetPr(prhs[8]);
+    double* tau_ptr = mxGetPr(prhs[9]);
 
     Eigen::Vector4d k(k_ptr[0], k_ptr[1], k_ptr[2], k_ptr[3]);
+    Eigen::Vector2d m(m_ptr[0], m_ptr[1]);
     Eigen::Vector2d l(l_ptr[0], l_ptr[1]);
+    Eigen::Vector2d d(d_ptr[0], d_ptr[1]);
     Eigen::Vector2d q(q_ptr[0], q_ptr[1]);
     Eigen::Vector2d qd(qd_ptr[0], qd_ptr[1]);
     Eigen::Vector2d x(x_ptr[0], x_ptr[1]);
@@ -70,11 +77,14 @@ void mexFunction(int nlhs, mxArray *plhs[],
             virtual_inertia_matrix,
             virtual_damping_matrix,
             virtual_stiffness_matrix,
-            torque_feedback_gain);
+            torque_feedback_gain,
+            m,
+            l,
+            d);
     }
 
     // Finite backward difference method to approximate acceleration numerically
-    // TODO: Make sure the velocity is given in m/s
+    // TODO: Check the units in which the velocity is given
     auto current_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = current_time - last_time;
     last_time = current_time;
@@ -98,10 +108,12 @@ void mexFunction(int nlhs, mxArray *plhs[],
 
     // Create MATLAB output
     plhs[0] = mxCreateDoubleMatrix(2, 1, mxREAL);
-    double* out = mxGetPr(plhs[0]);
+    plhs[1] = mxCreateDoubleMatrix(2, 1, mxREAL);
+    double* out1 = mxGetPr(plhs[0]);
+    double* out2 = mxGetPr(plhs[1]);
 
-    out[0] = result(0);
-    out[1] = result(1);
-    out[2] = qdd(0);
-    out[3] = qdd(1);
+    out1[0] = result(0);
+    out1[1] = result(1);
+    out2[0] = qdd(0);
+    out2[1] = qdd(1);
 }

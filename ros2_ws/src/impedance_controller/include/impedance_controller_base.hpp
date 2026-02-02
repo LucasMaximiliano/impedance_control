@@ -24,7 +24,10 @@ class ImpedanceControllerBase
             const Eigen::Matrix2d& virtual_inertia_matrix,
             const Eigen::Matrix2d& virtual_damping_matrix,
             const Eigen::Matrix2d& virtual_stiffness_matrix,
-            double force_feedback_gain);
+            const double force_feedback_gain,
+            const Eigen::Vector2d& link_mass_vector,
+            const Eigen::Vector2d& link_length_vector,
+            const Eigen::Vector2d& dist_to_link_com_vector);
         ~ImpedanceControllerBase();
         //! \}
 
@@ -70,12 +73,19 @@ class ImpedanceControllerBase
         //! \}
         
     private:
-        //! \name Parameters
+        //! \name Impedance Controller Parameters
         //! \{
         Eigen::Matrix2d virtual_inertia_matrix_;    //!< Virtual inertia matrix (2x2)
         Eigen::Matrix2d virtual_damping_matrix_;    //!< Virtual damping matrix (2x2)
         Eigen::Matrix2d virtual_stiffness_matrix_;  //!< Virtual stiffness matrix (2x2)
         double force_feedback_gain_;                //!< Force feedback gain (scalar)
+        //! \}
+
+        //! \name Mechanical Robot Parameters
+        //! \{
+        Eigen::Vector2d link_mass_vector_;         //!< Link mass vector (2x1)
+        Eigen::Vector2d link_length_vector_;       //!< Link length vector (2x1)
+        Eigen::Vector2d dist_to_link_com_vector_;  //!< Distance to link center of mass vector (2x1)
         //! \}
 
         //! \name Input Variables
