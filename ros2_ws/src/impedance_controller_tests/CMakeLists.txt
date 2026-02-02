@@ -42,6 +42,32 @@ target_compile_definitions(forward_finger_kinematics_mex PRIVATE
     MATLAB_MEX_FILE
 )
 
+# Gravity compensation MEX target ------------------------------------------------------
+add_library(gravity_compensation_mex SHARED
+    src/mex/gravity_compensation_mex.cpp
+)
+
+set_target_properties(gravity_compensation_mex PROPERTIES
+    PREFIX ""
+    SUFFIX ".${Matlab_MEX_EXTENSION}"
+)
+
+target_include_directories(gravity_compensation_mex PRIVATE
+    "${Matlab_ROOT_DIR}/extern/include"
+    ${PROJECT_SOURCE_DIR}/../impedance_controller/include
+)
+
+target_link_libraries(gravity_compensation_mex
+    "${Matlab_MEX_LIBRARY}"
+    "${Matlab_ROOT_DIR}/bin/maca64/libmx.dylib"
+    "${Matlab_ROOT_DIR}/bin/maca64/libmat.dylib"
+    Eigen3::Eigen
+)
+
+target_compile_definitions(gravity_compensation_mex PRIVATE
+    MATLAB_MEX_FILE
+)
+
 # Impedance controller MEX target ------------------------------------------------------
 add_library(impedance_controller_mex SHARED
     src/mex/impedance_controller_mex.cpp
