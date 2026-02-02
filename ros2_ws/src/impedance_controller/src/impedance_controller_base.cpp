@@ -35,6 +35,9 @@ ImpedanceControllerBase::ImpedanceControllerBase(
     std::cout << "  Virtual Damping Matrix:\n" << virtual_damping_matrix_ << std::endl;
     std::cout << "  Virtual Stiffness Matrix:\n" << virtual_stiffness_matrix_ << std::endl;
     std::cout << "  Force Feedback Gain: " << force_feedback_gain_ << std::endl;
+    std::cout << "  Link Mass Vector:\n" << link_mass_vector_ << std::endl;
+    std::cout << "  Link Length Vector:\n" << link_length_vector_ << std::endl;
+    std::cout << "  Distance to Link COM Vector:\n" << dist_to_link_com_vector_ << std::endl;
     std::cout << "  Remaining member variables initialized to zero." << std::endl;
 }
 
