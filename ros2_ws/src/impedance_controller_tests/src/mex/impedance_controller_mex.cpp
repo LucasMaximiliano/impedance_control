@@ -84,7 +84,6 @@ void mexFunction(int nlhs, mxArray *plhs[],
     }
 
     // Finite backward difference method to approximate acceleration numerically
-    // TODO: Check the units in which the velocity is given
     auto current_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = current_time - last_time;
     last_time = current_time;
