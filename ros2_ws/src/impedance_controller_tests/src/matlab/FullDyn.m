@@ -24,7 +24,6 @@ T1        = zeros(1,1);
 T2        = zeros(1,1);
 thdotdot1 = zeros(1,1);
 thdotdot2 = zeros(1,1);
-% implementation_toggle = true;
 if implementation_toggle == true
     %Torque to track our desired point
     T = ImpedenceControl(p.Kd,p.Kp,p.l1,p.l2,th1,th2,thdot1,thdot2,xdotCurrentTar,xCurrentTar,ydotCurrentTar,yCurrentTar);

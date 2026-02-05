@@ -99,6 +99,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
     impedance_controller->setCartesianPositionDesired(x);
     impedance_controller->setCartesianVelocityDesired(xd);
     impedance_controller->setCartesianAccelerationDesired(xdd);
+    impedance_controller->setJointPositionMeasured(q);
+    impedance_controller->setJointVelocityMeasured(qd);
     impedance_controller->setCartesianPositionMeasured(cartesian_position_measured);
     impedance_controller->setCartesianVelocityMeasured(cartesian_velocity_measured);
     impedance_controller->setJointTorqueMeasured(tau_meas);
