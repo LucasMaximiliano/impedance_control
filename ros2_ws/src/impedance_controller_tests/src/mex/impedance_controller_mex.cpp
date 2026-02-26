@@ -9,9 +9,10 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
     // Check number of inputs and outputs
-    if (nrhs != 10) {
+    if (nrhs != 11) {
         mexErrMsgTxt("Usage: impedance_torque_cmd = impedance_controller_mex(gain(x4), link_mass(x2), "
-            "link_length(x2), link_com_distance(x2), joint_position(x2), joint_velocity(x2), "
+            "link_length(x2), link_com_distance(x2), max_actuator_torque (scalar), "
+            "joint_position(x2), joint_velocity(x2), "
             "cartesian_target_position(x2), cartesian_target_velocity(x2), "
             "cartesian_target_acceleration(x2), torque_feedback(x2));");
     }
@@ -20,35 +21,38 @@ void mexFunction(int nlhs, mxArray *plhs[],
     }
 
     // Check dimension of inputs
-    if (!mxIsDouble(prhs[0]) || mxGetNumberOfElements(prhs[0]) != 4 ||
-        !mxIsDouble(prhs[1]) || mxGetNumberOfElements(prhs[1]) != 2 ||
-        !mxIsDouble(prhs[2]) || mxGetNumberOfElements(prhs[2]) != 2 ||
-        !mxIsDouble(prhs[3]) || mxGetNumberOfElements(prhs[3]) != 2 ||
-        !mxIsDouble(prhs[4]) || mxGetNumberOfElements(prhs[4]) != 2 ||
-        !mxIsDouble(prhs[5]) || mxGetNumberOfElements(prhs[5]) != 2 ||
-        !mxIsDouble(prhs[6]) || mxGetNumberOfElements(prhs[6]) != 2 ||
-        !mxIsDouble(prhs[7]) || mxGetNumberOfElements(prhs[7]) != 2 ||
-        !mxIsDouble(prhs[8]) || mxGetNumberOfElements(prhs[8]) != 2 ||
-        !mxIsDouble(prhs[9]) || mxGetNumberOfElements(prhs[9]) != 2) {
-        mexErrMsgTxt("gain must be a 4x1 double vector and the remaining arguments 2x1 double vectors.");
+    if (!mxIsDouble(prhs[0])  || mxGetNumberOfElements(prhs[0]) != 4 ||
+        !mxIsDouble(prhs[1])  || mxGetNumberOfElements(prhs[1]) != 2 ||
+        !mxIsDouble(prhs[2])  || mxGetNumberOfElements(prhs[2]) != 2 ||
+        !mxIsDouble(prhs[3])  || mxGetNumberOfElements(prhs[3]) != 2 ||
+        !mxIsDouble(prhs[4])  || mxGetNumberOfElements(prhs[4]) != 1 ||
+        !mxIsDouble(prhs[5])  || mxGetNumberOfElements(prhs[5]) != 2 ||
+        !mxIsDouble(prhs[6])  || mxGetNumberOfElements(prhs[6]) != 2 ||
+        !mxIsDouble(prhs[7])  || mxGetNumberOfElements(prhs[7]) != 2 ||
+        !mxIsDouble(prhs[8])  || mxGetNumberOfElements(prhs[8]) != 2 ||
+        !mxIsDouble(prhs[9])  || mxGetNumberOfElements(prhs[9]) != 2 ||
+        !mxIsDouble(prhs[10]) || mxGetNumberOfElements(prhs[10]) != 2) {
+        mexErrMsgTxt("gain must be a 4x1 double vector, max torque must be a double scalar, and the remaining arguments 2x1 double vectors.");
     }
 
     // Read inputs
-    double* k_ptr   = mxGetPr(prhs[0]);
-    double* m_ptr   = mxGetPr(prhs[1]);
-    double* l_ptr   = mxGetPr(prhs[2]);
-    double* d_ptr   = mxGetPr(prhs[3]);
-    double* q_ptr   = mxGetPr(prhs[4]);
-    double* qd_ptr  = mxGetPr(prhs[5]);
-    double* x_ptr   = mxGetPr(prhs[6]);
-    double* xd_ptr  = mxGetPr(prhs[7]);
-    double* xdd_ptr = mxGetPr(prhs[8]);
-    double* tau_ptr = mxGetPr(prhs[9]);
+    double* k_ptr     = mxGetPr(prhs[0]);
+    double* m_ptr     = mxGetPr(prhs[1]);
+    double* l_ptr     = mxGetPr(prhs[2]);
+    double* d_ptr     = mxGetPr(prhs[3]);
+    double* tau_m_ptr = mxGetPr(prhs[4]);
+    double* q_ptr     = mxGetPr(prhs[5]);
+    double* qd_ptr    = mxGetPr(prhs[6]);
+    double* x_ptr     = mxGetPr(prhs[7]);
+    double* xd_ptr    = mxGetPr(prhs[8]);
+    double* xdd_ptr   = mxGetPr(prhs[9]);
+    double* tau_ptr   = mxGetPr(prhs[10]);
 
     Eigen::Vector4d k(k_ptr[0], k_ptr[1], k_ptr[2], k_ptr[3]);
     Eigen::Vector2d m(m_ptr[0], m_ptr[1]);
     Eigen::Vector2d l(l_ptr[0], l_ptr[1]);
     Eigen::Vector2d d(d_ptr[0], d_ptr[1]);
+    double tau_max = tau_m_ptr[0];
     Eigen::Vector2d q(q_ptr[0], q_ptr[1]);
     Eigen::Vector2d qd(qd_ptr[0], qd_ptr[1]);
     Eigen::Vector2d x(x_ptr[0], x_ptr[1]);
@@ -80,7 +84,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
             torque_feedback_gain,
             m,
             l,
-            d);
+            d,
+            tau_max);
     }
 
     // Finite backward difference method to approximate acceleration numerically

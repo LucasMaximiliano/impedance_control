@@ -27,7 +27,8 @@ class ImpedanceControllerBase
             const double force_feedback_gain,
             const Eigen::Vector2d& link_mass_vector,
             const Eigen::Vector2d& link_length_vector,
-            const Eigen::Vector2d& dist_to_link_com_vector);
+            const Eigen::Vector2d& dist_to_link_com_vector,
+            const double max_actuator_torque);
         ~ImpedanceControllerBase();
         //! \}
 
@@ -86,6 +87,11 @@ class ImpedanceControllerBase
         Eigen::Vector2d link_mass_vector_;         //!< Link mass vector (2x1)
         Eigen::Vector2d link_length_vector_;       //!< Link length vector (2x1)
         Eigen::Vector2d dist_to_link_com_vector_;  //!< Distance to link center of mass vector (2x1)
+        //! \}
+
+        //! \name Actuator Parameters
+        //! \{
+        double max_actuator_torque_;    //!< Maximal actuator torque (scalar) in Nm
         //! \}
 
         //! \name Input Variables
