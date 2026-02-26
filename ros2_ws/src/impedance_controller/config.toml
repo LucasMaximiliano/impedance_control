@@ -40,11 +40,11 @@ link_length_vector = [323.09, 381.40]
 # Distance to link CoM vector (2x1)
 dist_to_link_com_vector = [1.0, 1.0]
 
-###############################
-#                             #
-#       MOTOR PARAMETERS      #
-#                             #
-###############################
+##########################
+#                        #
+#    MOTOR PARAMETERS    #
+#                        #
+##########################
 
 # Maximal torque (scalar) in Nm
 max_actuator_torque = 120
