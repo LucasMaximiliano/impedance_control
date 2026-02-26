@@ -45,12 +45,10 @@ else
         [0,0]);
 
     % TODO: Replace GravityCompT1 and GravityCompT2 with my own implementation
-    % G  = gravity_compensation_mex([p.m1,p.m2], [p.l1,p.l2], [p.d1,p.d2], ...
-    %     [th1,th2]);
-    % T1 = T(1) + G(1);
-    % T2 = T(2) + G(2);
-    T1 = T(1) + GravityCompT1(0,0,p.d1,p.d2,p.g,p.l1,p.l2,p.m1,p.m2,th1,th2,thdot1,thdot2);
-    T2 = T(2) + GravityCompT2(0,0,p.d2,p.g,p.l1,p.l2,p.m2,th1,th2,thdot1);
+    G  = gravity_compensation_mex([p.m1,p.m2], [p.l1,p.l2], [p.d1,p.d2], ...
+        [q1,q2]);
+    T1 = T(1) + G(1);
+    T2 = T(2) + G(2);
 
     % TODO: Replace Thdotdot1 and Thdotdot2 with my own implementation
     % thdotdot1 = thdotdot(1);
