@@ -63,6 +63,15 @@ Eigen::Vector2d ImpedanceControllerBase::computeImpedanceTorque()
         virtual_damping_matrix_ * velocity_error +
         virtual_stiffness_matrix_ * position_error) +
         force_feedback_gain_ * joint_torque_measured_;
+
+    if (joint_torque_commanded.hasNaN()) {
+        std::cerr << "[ImpedanceControllerBase] Warning: Computed joint torque contains NaN values. Setting to zero." << std::endl;
+        joint_torque_commanded.setZero();
+    } 
+    if (joint_torque_commanded.cwiseAbs().maxCoeff() > max_actuator_torque_) {
+        std::cerr << "[ImpedanceControllerBase] Warning: Computed joint torque exceeds maximum actuator torque. Clamping values." << std::endl;
+        joint_torque_commanded = joint_torque_commanded.cwiseMin(max_actuator_torque_).cwiseMax(-max_actuator_torque_);
+    }
     
-    return joint_torque_commanded.cwiseMin(max_actuator_torque_).cwiseMax(-max_actuator_torque_);
+    return joint_torque_commanded;
 }
