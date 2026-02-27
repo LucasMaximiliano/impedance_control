@@ -36,6 +36,8 @@ namespace impedance_controller_params {
             dist_to_com_vector_ << com_data[0], com_data[1];
 
             auto max_actuator_torque_ = toml::find<double>(config, "max_actuator_torque");
+
+            auto control_loop_duration_ = toml::find<double>(config, "control_loop_duration");
         } catch (const std::exception& e) {
             throw std::runtime_error("Missing impedance controller parameter in TOML: " + std::string(e.what()));
         }

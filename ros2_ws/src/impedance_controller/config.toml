@@ -25,6 +25,9 @@ virtual_stiffness_matrix = [
 # Force feedback gain (scalar)
 force_feedback_gain = 0.5
 
+# Control loop duration (scalar) in ms
+control_loop_duration = 1
+
 ###############################
 #                             #
 #    MECHANICAL PARAMETERS    #
@@ -34,11 +37,11 @@ force_feedback_gain = 0.5
 # Link mass vector (2x1) in kg
 link_mass_vector = [3.4, 1.37]
 
-# Link length vector (2x1) in mm
-link_length_vector = [353.12, 379.56]
+# Link length vector (2x1) in m
+link_length_vector = [0.35, 0.38]
 
-# Distance to link CoM vector (2x1) in mm
-dist_to_link_com_vector = [282.5, 189.78]
+# Distance to link CoM vector (2x1) in m
+dist_to_link_com_vector = [0.28, 0.19]
 
 ##########################
 #                        #
