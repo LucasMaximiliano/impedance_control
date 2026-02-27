@@ -36,13 +36,13 @@ addpath(['../../build/']);
 %Initial conditions:
 p.init = [pi/4    0.0    pi/4  0.0]';
 
-p.g = 9.81;
-p.m1 = 1; %Mass of link 1.
-p.m2 = 1; %Mass of link 2.
-p.l1 = 1; %Total length of link 1.
-p.l2 = 1; %Total length of link 2.
-p.d1 = p.l1/2; %Center of mass distance along link 1 from the fixed joint.
-p.d2 = p.l2/2; %Center of mass distance along link 2 from the fixed joint.
+p.g  = 9.81;
+p.m1 = 3.4;     %1; %Mass of link 1.
+p.m2 = 1.37;    %1; %Mass of link 2.
+p.l1 = 0.35312; %1; %Total length of link 1.
+p.l2 = 0.37956; %1; %Total length of link 2.
+p.d1 = p.l1/2;  %Center of mass distance along link 1 from the fixed joint.
+p.d2 = p.l2/2;  %Center of mass distance along link 2 from the fixed joint.
 p.I1 = 1/12*p.m1*p.l1^2; %Moment of inertia of link 1 about COM
 p.I2 = 1/12*p.m2*p.l2^2; %Moment of inertia of link 2 about COM
 
@@ -50,9 +50,14 @@ endZ = zeros(3,1);
 if implementation_toggle == true
     endZ = ForwardKin(p.l1,p.l2,p.init(1),p.init(3));
 else
-    % TODO: Replace ForwardKin with my own implementation
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%% CUSTOM CODE %%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     [q1, q2] = CoordinateTransform(p.init(1),p.init(3));
     endZ = forward_finger_kinematics_mex([q1, q2], [p.l1, p.l2]);
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 end
 x0 = endZ(1); %End effector initial position in world frame.
 y0 = endZ(2);

@@ -36,7 +36,9 @@ if implementation_toggle == true
     thdotdot1 = Thdotdot1(FxCurrent,FyCurrent,p.I1,p.I2,T1,T2,p.d1,p.d2,p.g,p.l1,p.l2,p.m1,p.m2,th1,th2,thdot1,thdot2);
     thdotdot2 = Thdotdot2(FxCurrent,FyCurrent,p.I1,p.I2,T1,T2,p.d1,p.d2,p.g,p.l1,p.l2,p.m1,p.m2,th1,th2,thdot1,thdot2);
 else
-    % TODO: Replace ImpedenceControl with my own implementation
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%% CUSTOM CODE %%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     [q1, q2] = CoordinateTransform(th1,th2); % Note that [qdot1,qdot2] == [thdot1,thdot2]
     [T,thdotdot] = impedance_controller_mex([0,p.Kd,p.Kp,0], ...
         [p.m1,p.m2], [p.l1,p.l2], [p.d1,p.d2], 120, ...
@@ -44,7 +46,6 @@ else
         [xCurrentTar,yCurrentTar], [xdotCurrentTar,ydotCurrentTar], [0,0], ...
         [0,0]);
 
-    % TODO: Replace GravityCompT1 and GravityCompT2 with my own implementation
     G  = gravity_compensation_mex([p.m1,p.m2], [p.l1,p.l2], [p.d1,p.d2], ...
         [q1,q2]);
     T1 = T(1) + G(1);
@@ -55,6 +56,9 @@ else
     % thdotdot2 = thdotdot(2);
     thdotdot1 = Thdotdot1(FxCurrent,FyCurrent,p.I1,p.I2,T1,T2,p.d1,p.d2,p.g,p.l1,p.l2,p.m1,p.m2,th1,th2,thdot1,thdot2);
     thdotdot2 = Thdotdot2(FxCurrent,FyCurrent,p.I1,p.I2,T1,T2,p.d1,p.d2,p.g,p.l1,p.l2,p.m1,p.m2,th1,th2,thdot1,thdot2);
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 end
 
 %Assemble the state vector derivatives.
