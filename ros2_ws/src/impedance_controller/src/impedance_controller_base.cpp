@@ -64,6 +64,7 @@ Eigen::Vector2d ImpedanceControllerBase::computeImpedanceTorque()
         virtual_stiffness_matrix_ * position_error) +
         force_feedback_gain_ * joint_torque_measured_;
 
+    // Safety checks for NaN values and torque limits
     if (joint_torque_commanded.hasNaN()) {
         std::cerr << "[ImpedanceControllerBase] Warning: Computed joint torque contains NaN values. Setting to zero." << std::endl;
         joint_torque_commanded.setZero();
