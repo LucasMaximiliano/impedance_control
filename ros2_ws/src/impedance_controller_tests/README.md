@@ -21,3 +21,11 @@ make
 After building the MEX function, you can run the simulation by executing the `MAIN.m` file in MATLAB. This will launch the simulation and allow you to interact with it using the provided GUI.
 
 Clicking with the mouse allows the user to change the desired position of the end-effector. Pressing any key will make it so that clicking on the plot now applies an external force to the end-effector. The direction of the force vector and its magnitude are determined by the position of the mouse click relative to the end-effector's current position. The further away from the end-effector, the stronger the applied force will be. For further details on the user interaction, please refer to the original documentation.
+
+# Miscellaneous
+> ℹ️ **Note**
+>  
+> The joint angles in the simulation are defined as follows. We must transform them to the DH-convention before using our controller.
+> <p align="center">
+>   <img src="../../../docs/images/sim_joint_angles.jpeg" alt="Joint Angle Definition in Simulation" width="300"/>
+> </p>
