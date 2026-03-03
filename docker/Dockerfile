@@ -1,0 +1,36 @@
+# docker/Dockerfile
+ARG ROS_DISTRO=humble
+FROM osrf/ros:$ROS_DISTRO-desktop-full
+
+# Disable interactive prompts during package installation
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
+      cmake \
+      git \
+      doxygen \
+      texlive-latex-base \
+      texlive-latex-extra \
+      texlive-fonts-recommended \
+      python3-colcon-common-extensions \
+      python3-pip \
+      pkg-config \
+      wget \
+      ros-$ROS_DISTRO-foxglove-bridge && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Re-enable interactive prompts
+ENV DEBIAN_FRONTEND=dialog
+
+# Set locale (i.e. standard for displaying language/region-specific characters)
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+# Workdir for builds
+WORKDIR /impedance_control
+
+# Expose the default Foxglove port
+EXPOSE 8765
