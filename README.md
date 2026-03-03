@@ -45,11 +45,26 @@ Always enter the docker container when developing. All the dependencies for the 
 Once you're satisfied with your work, leave the container **first** and perform the necessary git operations (add, commit, push, etc.) **second**. You may add changes inside the container, but commiting and pushing is definitely easier outside due to the complexity of SSH identification in the container.
 
 ## Usage
+### Configuration
 To configure the impedance controller, modify the parameters in the `config.toml` file located in the `impedance_controller` package directory. The parameters include the
 - virtual stiffness matrix,
 - virtual damping matrix,
 - virtual inertia matrix, and
 - torque feedback gain.
+### Build & Run
+To build the ROS2 workspace, go to the `ros2_ws` directory and run
+``` bash
+source /opt/ros/humble/setup.bash
+colcon build
+```
+After that, source the ROS2 workspace with
+``` bash
+source install/setup.bash
+```
+and execute the application with
+``` bash
+ros2 run impedance_controller main
+```
 
 ## Documentation
 The implementation of the impedance controller is documented using Doxygen. To generate the documentation, navigate to the `docs/` directory and run:
