@@ -11,26 +11,29 @@ ImpedanceControllerBase::ImpedanceControllerBase(
     const Eigen::Vector2d& link_mass_vector,
     const Eigen::Vector2d& link_length_vector,
     const Eigen::Vector2d& dist_to_link_com_vector,
-    const double max_actuator_torque)
+    const double max_actuator_torque,
+    const int control_loop_duration)
     : virtual_inertia_matrix_(virtual_inertia_matrix),
       virtual_damping_matrix_(virtual_damping_matrix),
       virtual_stiffness_matrix_(virtual_stiffness_matrix),
       force_feedback_gain_(force_feedback_gain),
+      control_loop_duration_(control_loop_duration),
       link_mass_vector_(link_mass_vector),
       link_length_vector_(link_length_vector),
       dist_to_link_com_vector_(dist_to_link_com_vector),
       max_actuator_torque_(max_actuator_torque),
+      cartesian_position_measured_(Eigen::Vector2d::Zero()),
+      cartesian_velocity_measured_(Eigen::Vector2d::Zero()),
+      cartesian_acceleration_computed_(Eigen::Vector2d::Zero()),
+      cartesian_position_desired_(Eigen::Vector2d::Zero()),
+      cartesian_velocity_desired_(Eigen::Vector2d::Zero()),
+      cartesian_acceleration_desired_(Eigen::Vector2d::Zero()),
       joint_position_measured_(Eigen::Vector2d::Zero()),
       joint_velocity_measured_(Eigen::Vector2d::Zero()),
       joint_torque_measured_(Eigen::Vector2d::Zero()),
       joint_position_desired_(Eigen::Vector2d::Zero()),
       joint_velocity_desired_(Eigen::Vector2d::Zero()),
-      joint_acceleration_desired_(Eigen::Vector2d::Zero()),
-      cartesian_position_measured_(Eigen::Vector2d::Zero()),
-      cartesian_velocity_measured_(Eigen::Vector2d::Zero()),
-      cartesian_position_desired_(Eigen::Vector2d::Zero()),
-      cartesian_velocity_desired_(Eigen::Vector2d::Zero()),
-      cartesian_acceleration_desired_(Eigen::Vector2d::Zero())
+      joint_acceleration_desired_(Eigen::Vector2d::Zero())
 {
     std::cout << "[ImpedanceControllerBase] Constructor called with..." << std::endl;
     std::cout << "  Virtual Inertia Matrix:\n" << virtual_inertia_matrix_ << std::endl;
@@ -41,6 +44,7 @@ ImpedanceControllerBase::ImpedanceControllerBase(
     std::cout << "  Link Length Vector:\n" << link_length_vector_ << std::endl;
     std::cout << "  Distance to Link COM Vector:\n" << dist_to_link_com_vector_ << std::endl;
     std::cout << "  Maximal actuator torque: " << max_actuator_torque_ << " Nm" << std::endl;
+    std::cout << "  Control loop duration: " << control_loop_duration_ << " ms" << std::endl;
     std::cout << "  Remaining member variables initialized to zero." << std::endl;
 }
 

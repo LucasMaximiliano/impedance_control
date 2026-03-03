@@ -10,6 +10,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
@@ -18,6 +19,8 @@ find_package(impedance_controller_params REQUIRED)
 
 add_executable(main
   src/main.cpp
+  src/impedance_controller_base.cpp
+  src/impedance_controller_ros2.cpp
 )
 
 target_include_directories(main
@@ -34,6 +37,7 @@ target_link_libraries(main
 ament_target_dependencies(main
   rclcpp
   std_msgs
+  ament_index_cpp
   # impedance_controller_msgs # See comment above about this package.
 )
 
