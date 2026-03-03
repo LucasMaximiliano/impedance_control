@@ -1,4 +1,6 @@
 docs/html
 docs/latex
 build/
+install/
+log/
 *.asv
