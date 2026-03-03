@@ -41,7 +41,7 @@ link_mass_vector = [3.4, 1.37]
 link_length_vector = [0.35, 0.38]
 
 # Distance to link CoM vector (2x1) in m
-dist_to_link_com_vector = [0.28, 0.19]
+dist_to_com_vector = [0.28, 0.19]
 
 ##########################
 #                        #

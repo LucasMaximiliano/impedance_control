@@ -20,7 +20,7 @@ namespace impedance_controller_params {
         Eigen::Vector2d link_mass_vector_;          //!< Link mass vector (2x1)
         Eigen::Vector2d link_length_vector_;        //!< Link length vector (2x1) in mm
         Eigen::Vector2d dist_to_com_vector_;        //!< Distance to center of mass vector (2x1)
-        double max_actuator_torque_;                //!< Maximal actuator torque (scalar) in Nm
+        int max_actuator_torque_;                   //!< Maximal actuator torque (scalar) in Nm
         int control_loop_duration_;                 //!< Control loop duration (scalar) in ms
 
         params_t() = delete;

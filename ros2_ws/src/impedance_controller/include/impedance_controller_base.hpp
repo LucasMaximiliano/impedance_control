@@ -125,7 +125,7 @@ class ImpedanceControllerBase
 
         //! \name Actuator Parameters
         //! \{
-        double max_actuator_torque_;    //!< Maximal actuator torque (scalar) in Nm
+        int max_actuator_torque_;    //!< Maximal actuator torque (scalar) in Nm
         //! \}
 
         //! \name Input Variables

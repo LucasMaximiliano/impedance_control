@@ -33,7 +33,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
         !mxIsDouble(prhs[9])  || mxGetNumberOfElements(prhs[9])  != 2 ||
         !mxIsDouble(prhs[10]) || mxGetNumberOfElements(prhs[10]) != 2 ||
         !mxIsDouble(prhs[11]) || mxGetNumberOfElements(prhs[11]) != 1) {
-        mexErrMsgTxt("gain must be a 4x1 double vector, max torque and loop duration must be a double scalar, and the remaining arguments 2x1 double vectors.");
+        mexErrMsgTxt("gain must be a 4x1 double vector, max torque and loop duration must be int scalars, and the remaining arguments 2x1 double vectors.");
     }
 
     // Read inputs
@@ -53,14 +53,14 @@ void mexFunction(int nlhs, mxArray *plhs[],
     Eigen::Vector2d m(m_ptr[0], m_ptr[1]);
     Eigen::Vector2d l(l_ptr[0], l_ptr[1]);
     Eigen::Vector2d d(d_ptr[0], d_ptr[1]);
-    double tau_max = tau_m_ptr[0];
+    int tau_max = tau_m_ptr[0];
     Eigen::Vector2d q(q_ptr[0], q_ptr[1]);
     Eigen::Vector2d qd(qd_ptr[0], qd_ptr[1]);
     Eigen::Vector2d x(x_ptr[0], x_ptr[1]);
     Eigen::Vector2d xd(xd_ptr[0], xd_ptr[1]);
     Eigen::Vector2d xdd(xdd_ptr[0], xdd_ptr[1]);
     Eigen::Vector2d tau_meas(tau_ptr[0], tau_ptr[1]);
-    double f = f_ptr[0];
+    int f = f_ptr[0];
 
     // Format inputs
     Eigen::Matrix2d virtual_inertia_matrix;
