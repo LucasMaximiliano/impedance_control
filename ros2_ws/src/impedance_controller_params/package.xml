@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>impedance_controller_params</name>
+  <version>0.0.1</version>
+  <description>ROS2 package for impedance controller parameter class.</description>
+  <maintainer email="lucasmo.silva@tum.de">Lucas M. O. Silva</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

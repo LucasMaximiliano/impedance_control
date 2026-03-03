@@ -1,9 +1,9 @@
 #include <stdexcept>
-#include "impedance_controller_params/impedance_controller_params.hpp"
-#include "impedance_controller_params/toml.hpp"
+#include "impedance_controller_params.hpp"
+#include "toml.hpp"
 
 namespace impedance_controller_params {
-    impedance_controller_params::params_t(const std::string& toml_path) {
+    params_t::params_t(const std::string& toml_path) {
         toml::value config;
         try {
             config = toml::parse(toml_path);

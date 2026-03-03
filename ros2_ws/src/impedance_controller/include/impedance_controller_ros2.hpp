@@ -2,8 +2,8 @@
 #define IMPEDANCE_CONTROLLER_ROS2_HPP
 
 #include "impedance_controller_base.hpp"
-#include "std_msgs/msg/Float32MultiArray.hpp"
-#include "std_msgs/msg/Float64MultiArray.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
+#include "std_msgs/msg/float64_multi_array.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 //! \class ImpedanceControllerROS2
