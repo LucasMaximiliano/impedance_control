@@ -9,30 +9,31 @@ void mexFunction(int nlhs, mxArray *plhs[],
                  int nrhs, const mxArray *prhs[])
 {
     // Check number of inputs and outputs
-    if (nrhs != 11) {
+    if (nrhs != 12) {
         mexErrMsgTxt("Usage: impedance_torque_cmd = impedance_controller_mex(gain(x4), link_mass(x2), "
             "link_length(x2), link_com_distance(x2), max_actuator_torque (scalar), "
             "joint_position(x2), joint_velocity(x2), "
-            "cartesian_target_position(x2), cartesian_target_velocity(x2), "
-            "cartesian_target_acceleration(x2), torque_feedback(x2));");
+            "cartesian_target_position(x2), cartesian_target_velocity(x2), cartesian_target_acceleration(x2), "
+            "torque_feedback(x2), loop_duration (scalar));");
     }
     if (nlhs != 2) {
         mexErrMsgTxt("Two outputs required (impedance_torque_cmd and joint_acceleration).");
     }
 
     // Check dimension of inputs
-    if (!mxIsDouble(prhs[0])  || mxGetNumberOfElements(prhs[0]) != 4 ||
-        !mxIsDouble(prhs[1])  || mxGetNumberOfElements(prhs[1]) != 2 ||
-        !mxIsDouble(prhs[2])  || mxGetNumberOfElements(prhs[2]) != 2 ||
-        !mxIsDouble(prhs[3])  || mxGetNumberOfElements(prhs[3]) != 2 ||
-        !mxIsDouble(prhs[4])  || mxGetNumberOfElements(prhs[4]) != 1 ||
-        !mxIsDouble(prhs[5])  || mxGetNumberOfElements(prhs[5]) != 2 ||
-        !mxIsDouble(prhs[6])  || mxGetNumberOfElements(prhs[6]) != 2 ||
-        !mxIsDouble(prhs[7])  || mxGetNumberOfElements(prhs[7]) != 2 ||
-        !mxIsDouble(prhs[8])  || mxGetNumberOfElements(prhs[8]) != 2 ||
-        !mxIsDouble(prhs[9])  || mxGetNumberOfElements(prhs[9]) != 2 ||
-        !mxIsDouble(prhs[10]) || mxGetNumberOfElements(prhs[10]) != 2) {
-        mexErrMsgTxt("gain must be a 4x1 double vector, max torque must be a double scalar, and the remaining arguments 2x1 double vectors.");
+    if (!mxIsDouble(prhs[0])  || mxGetNumberOfElements(prhs[0])  != 4 ||
+        !mxIsDouble(prhs[1])  || mxGetNumberOfElements(prhs[1])  != 2 ||
+        !mxIsDouble(prhs[2])  || mxGetNumberOfElements(prhs[2])  != 2 ||
+        !mxIsDouble(prhs[3])  || mxGetNumberOfElements(prhs[3])  != 2 ||
+        !mxIsDouble(prhs[4])  || mxGetNumberOfElements(prhs[4])  != 1 ||
+        !mxIsDouble(prhs[5])  || mxGetNumberOfElements(prhs[5])  != 2 ||
+        !mxIsDouble(prhs[6])  || mxGetNumberOfElements(prhs[6])  != 2 ||
+        !mxIsDouble(prhs[7])  || mxGetNumberOfElements(prhs[7])  != 2 ||
+        !mxIsDouble(prhs[8])  || mxGetNumberOfElements(prhs[8])  != 2 ||
+        !mxIsDouble(prhs[9])  || mxGetNumberOfElements(prhs[9])  != 2 ||
+        !mxIsDouble(prhs[10]) || mxGetNumberOfElements(prhs[10]) != 2 ||
+        !mxIsDouble(prhs[11]) || mxGetNumberOfElements(prhs[11]) != 1) {
+        mexErrMsgTxt("gain must be a 4x1 double vector, max torque and loop duration must be a double scalar, and the remaining arguments 2x1 double vectors.");
     }
 
     // Read inputs
@@ -47,7 +48,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     double* xd_ptr    = mxGetPr(prhs[8]);
     double* xdd_ptr   = mxGetPr(prhs[9]);
     double* tau_ptr   = mxGetPr(prhs[10]);
-
+    double* f_ptr     = mxGetPr(prhs[11]);
     Eigen::Vector4d k(k_ptr[0], k_ptr[1], k_ptr[2], k_ptr[3]);
     Eigen::Vector2d m(m_ptr[0], m_ptr[1]);
     Eigen::Vector2d l(l_ptr[0], l_ptr[1]);
@@ -59,6 +60,7 @@ void mexFunction(int nlhs, mxArray *plhs[],
     Eigen::Vector2d xd(xd_ptr[0], xd_ptr[1]);
     Eigen::Vector2d xdd(xdd_ptr[0], xdd_ptr[1]);
     Eigen::Vector2d tau_meas(tau_ptr[0], tau_ptr[1]);
+    double f = f_ptr[0];
 
     // Format inputs
     Eigen::Matrix2d virtual_inertia_matrix;
@@ -85,7 +87,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
             m,
             l,
             d,
-            tau_max);
+            tau_max,
+            f);
     }
 
     // Finite backward difference method to approximate acceleration numerically
