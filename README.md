@@ -42,7 +42,7 @@ docker exec -it impedance_controller_dev_container /bin/bash
 
 Always enter the docker container when developing. All the dependencies for the project are already set-up inside the container, so you don't have to worry about that.
 
-Once you're satisfied with your work, leave the container **first** and perform the necessary git operations (add, commit, push, etc.) **second**. You may add and commit inside the container, but pushing is definitely easier outside due to the complexity of SSH identification in the container.
+Once you're satisfied with your work, leave the container **first** and perform the necessary git operations (add, commit, push, etc.) **second**. You may add changes inside the container, but commiting and pushing is definitely easier outside due to the complexity of SSH identification in the container.
 
 ## Usage
 To configure the impedance controller, modify the parameters in the `config.toml` file located in the `impedance_controller` package directory. The parameters include the
