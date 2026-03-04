@@ -3,8 +3,6 @@
 #include "finger_kinematics.hpp"
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
-#define RPM_TO_RAD_PER_SEC (2.0 * M_PI / 60.0)
-
 static ImpedanceControllerBase initializeController()
 {
   std::string package_share_directory = ament_index_cpp::get_package_share_directory(
@@ -78,22 +76,14 @@ ImpedanceControllerROS2::ImpedanceControllerROS2()
     }
   );
   measured_velocity_subscription_ = this->create_subscription<std_msgs::msg::Float32MultiArray>(
-    "/velocity_rpm", 10,
+    "/velocity", 10,
     [this](const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
       if (msg->data.size() >= 8) {
         // Parse message content
-        Eigen::Vector2d joint_velocity_1(
-          msg->data[0] * RPM_TO_RAD_PER_SEC,
-          msg->data[1] * RPM_TO_RAD_PER_SEC);
-        Eigen::Vector2d joint_velocity_2(
-          msg->data[2] * RPM_TO_RAD_PER_SEC,
-          msg->data[3] * RPM_TO_RAD_PER_SEC);
-        Eigen::Vector2d joint_velocity_3(
-          msg->data[4] * RPM_TO_RAD_PER_SEC,
-          msg->data[5] * RPM_TO_RAD_PER_SEC);
-        Eigen::Vector2d joint_velocity_4(
-          msg->data[6] * RPM_TO_RAD_PER_SEC,
-          msg->data[7] * RPM_TO_RAD_PER_SEC);
+        Eigen::Vector2d joint_velocity_1(msg->data[0], msg->data[1]);
+        Eigen::Vector2d joint_velocity_2(msg->data[2], msg->data[3]);
+        Eigen::Vector2d joint_velocity_3(msg->data[4], msg->data[5]);
+        Eigen::Vector2d joint_velocity_4(msg->data[6], msg->data[7]);
         // Set measured joint velocities for all four fingers (2 joints per finger)
         impedance_controller_1_.setJointVelocityMeasured(joint_velocity_1);
         impedance_controller_2_.setJointVelocityMeasured(joint_velocity_2);
@@ -161,21 +151,13 @@ ImpedanceControllerROS2::ImpedanceControllerROS2()
     }
   );
   desired_velocity_subscription_ = this->create_subscription<std_msgs::msg::Float32MultiArray>(
-    "/desired_joint_velocity_rpm", 10,                                                                                              /* TODO: Check type */
+    "/desired_joint_velocity", 10,                                                                                              /* TODO: Check type */
     [this](const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
       if (msg->data.size() >= 8) {
-        Eigen::Vector2d desired_joint_velocity_1(
-          msg->data[0] * RPM_TO_RAD_PER_SEC,
-          msg->data[1] * RPM_TO_RAD_PER_SEC);                                                                                   /* TODO: Check units */
-        Eigen::Vector2d desired_joint_velocity_2(
-          msg->data[2] * RPM_TO_RAD_PER_SEC,
-          msg->data[3] * RPM_TO_RAD_PER_SEC);                                                                                   /* TODO: Check units */
-        Eigen::Vector2d desired_joint_velocity_3(
-          msg->data[4] * RPM_TO_RAD_PER_SEC,
-          msg->data[5] * RPM_TO_RAD_PER_SEC);                                                                                   /* TODO: Check units */
-        Eigen::Vector2d desired_joint_velocity_4(
-          msg->data[6] * RPM_TO_RAD_PER_SEC,
-          msg->data[7] * RPM_TO_RAD_PER_SEC);                                                                                   /* TODO: Check units */
+        Eigen::Vector2d desired_joint_velocity_1(msg->data[0], msg->data[1]);                                                                                   /* TODO: Check units */
+        Eigen::Vector2d desired_joint_velocity_2(msg->data[2], msg->data[3]);                                                                                   /* TODO: Check units */
+        Eigen::Vector2d desired_joint_velocity_3(msg->data[4], msg->data[5]);                                                                                   /* TODO: Check units */
+        Eigen::Vector2d desired_joint_velocity_4(msg->data[6], msg->data[7]);                                                                                   /* TODO: Check units */
         impedance_controller_1_.setCartesianVelocityDesired(
           finger_kinematics::jacobian(
             impedance_controller_1_.getJointPositionDesired(),
