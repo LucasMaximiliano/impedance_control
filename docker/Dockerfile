@@ -18,7 +18,6 @@ RUN apt-get update && \
       texlive-fonts-recommended \
       python3-colcon-common-extensions \
       python3-pip \
-      python3-ament-package \
       pkg-config \
       wget \
       ros-$ROS_DISTRO-foxglove-bridge && \

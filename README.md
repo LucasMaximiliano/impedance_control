@@ -66,6 +66,20 @@ and execute the application with
 ros2 run impedance_controller main
 ```
 
+### Testing
+#### Simulation tests
+To run the simulation tests for the impedance controller, open the `matlab/` folder with your local MATLAB installation and execute the `MAIN.m` script. For more details on the simulation tests, refer to the dedicated README file in the `impedance_controller_sim/` directory.
+#### Integration tests
+To run the integration tests for the impedance controller, use the following command in the `ros2_ws/` directory:
+``` bash
+colcon test --packages-select impedance_controller
+```
+This will execute all the tests defined for the `impedance_controller` package. You can view the test results in the terminal or generate a report for more detailed information. To generate a test report, run:
+``` bash
+colcon test-result --all --verbose
+```
+The `--verbose` flag is optional and provides more detailed output. This will generate a detailed report of the test results, including any failures or errors encountered during testing.
+
 ## Documentation
 The implementation of the impedance controller is documented using Doxygen. To generate the documentation, navigate to the `docs/` directory and run:
 ```bash

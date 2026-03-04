@@ -3,7 +3,7 @@ project(impedance_controller)
 
 ###################
 #   Development   #
-################### 
+###################
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
@@ -21,31 +21,31 @@ find_package(Eigen3 REQUIRED)
 # find_package(impedance_controller_msgs REQUIRED) # This package is not yet needed, but might be in the future when we add custom messages.
 find_package(impedance_controller_params REQUIRED)
 
-add_executable(main
+add_executable(impedance_controller_node
   src/main.cpp
   src/impedance_controller_base.cpp
   src/impedance_controller_ros2.cpp
 )
 
-target_include_directories(main
+target_include_directories(impedance_controller_node
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(main
+target_link_libraries(impedance_controller_node
   Eigen3::Eigen
   impedance_controller_params::impedance_controller_params
 )
 
-ament_target_dependencies(main
+ament_target_dependencies(impedance_controller_node
   rclcpp
   std_msgs
   ament_index_cpp
   # impedance_controller_msgs # See comment above about this package.
 )
 
-install(TARGETS main
+install(TARGETS impedance_controller_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -56,13 +56,6 @@ install(DIRECTORY include/
 install(FILES config.toml # impedance_controller_foxglove_layout.json # This file is not yet needed, but might be in the future when we add a custom Foxglove layout.
   DESTINATION share/${PROJECT_NAME}/
 )
-
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  set(ament_cmake_copyright_FOUND TRUE)
-  set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
-endif()
 
 ament_export_dependencies(
   rclcpp
@@ -85,5 +78,5 @@ if(BUILD_TESTING)
     set(RUNNER "${ament_cmake_ros_DIR}/run_test_isolated.py")
     add_launch_test("${path}" RUNNER "${RUNNER}" ${ARGN})
   endfunction()
-  add_ros_isolated_launch_test(test/test_integration.py)
+  add_ros_isolated_launch_test(tests/test_integration.py)
 endif()

@@ -44,7 +44,7 @@ class TestImpedanceController(unittest.TestCase):
         self.node.destroy_node()
 
     def test_publishes_clamped_torque(self, proc_output):
-        """Check whether torque messages get clamped"""
+        """Check whether torque messages get clamped."""
         msgs_rx = []
         sub = self.node.create_subscription(
             std_msgs.msg.Float32MultiArray, '/command/set_torque_nm',
@@ -57,12 +57,12 @@ class TestImpedanceController(unittest.TestCase):
                 rclpy.spin_once(self.node, timeout_sec=1)
             # All received torques should be within a safe range
             # TODO: Update the range below based on the actual limits of the system
-            assert all(abs(t) <= 120 for msg in msgs_rx for t in msg.data)
+            assert all(abs(t) <= 30 for msg in msgs_rx for t in msg.data)
         finally:
             self.node.destroy_subscription(sub)
 
     def test_publishes_zero_torque(self, proc_output):
-        """Check whether torque messages get zeroed out"""
+        """Check whether torque messages get zeroed out."""
         msgs_rx = []
         sub = self.node.create_subscription(
             std_msgs.msg.Float32MultiArray, '/command/set_torque_nm',
@@ -83,7 +83,7 @@ class TestImpedanceController(unittest.TestCase):
             self.node.destroy_subscription(sub)
 
     def test_publishes_torque(self, proc_output):
-        """Check whether torque messages published"""
+        """Check whether torque messages published."""
         msgs_rx = []
         sub = self.node.create_subscription(
             std_msgs.msg.Float32MultiArray, '/command/set_torque_nm',
@@ -100,13 +100,13 @@ class TestImpedanceController(unittest.TestCase):
             self.node.destroy_subscription(sub)
 
     def test_logs_spawning(self, proc_output):
-        """Check whether logging properly"""
+        """Check whether logging properly."""
         proc_output.assertWaitFor(
             'Constructing... Impedance Controller Node',
             timeout=5, stream='stderr')
 
     def test_logs_despawning(self, proc_output):
-        """Check whether logging properly"""
+        """Check whether logging properly."""
         proc_output.assertWaitFor(
             'Destructing... Impedance Controller Node',
             timeout=5, stream='stderr')
