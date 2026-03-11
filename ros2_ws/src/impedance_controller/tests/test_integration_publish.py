@@ -10,7 +10,6 @@ import launch_testing
 import rclpy
 import std_msgs.msg
 
-ROS_DOMAIN_ID = "2"
 OUTPUT_TOPIC = "/command/set_torque_nm"
 TEST_TIMEOUT_SEC = 2.0
 SPIN_TIMEOUT_SEC = 0.05
@@ -23,13 +22,10 @@ def generate_test_description():
         namespace='',
         executable='impedance_controller_node',
         name='impedance_controller',
-        additional_env={'ROS_DOMAIN_ID': ROS_DOMAIN_ID},
     )
     return (
         launch.LaunchDescription(
             [
-                # Isolated test environment
-                launch.actions.SetEnvironmentVariable('ROS_DOMAIN_ID', ROS_DOMAIN_ID),
                 # Nodes under test
                 impedance_controller_node,
                 # Launch tests 0.5 s later
@@ -44,7 +40,6 @@ class TestImpedanceController(unittest.TestCase):
     """Active integration tests while the node is running."""
     @classmethod
     def setUpClass(cls):
-        os.environ["ROS_DOMAIN_ID"] = ROS_DOMAIN_ID
         rclpy.init()
 
     @classmethod

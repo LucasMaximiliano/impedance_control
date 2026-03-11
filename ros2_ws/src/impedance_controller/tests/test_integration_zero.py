@@ -9,10 +9,12 @@ import launch_ros
 import launch_testing
 import rclpy
 import std_msgs.msg
+import std_srvs.srv
 
-ROS_DOMAIN_ID = "4"
 OUTPUT_TOPIC = "/command/set_torque_nm"
 INPUT_TOPIC = "/torque_nm"
+SERVICE_TOPIC_1 = "/gravity_compensation_enabled"
+SERVICE_TOPIC_2 = "/impedance_control_enabled"
 CLAMP_THRESHOLD_NM = 30.0
 TEST_TIMEOUT_SEC = 2.0
 SPIN_TIMEOUT_SEC = 0.05
@@ -25,13 +27,10 @@ def generate_test_description():
         namespace='',
         executable='impedance_controller_node',
         name='impedance_controller',
-        additional_env={'ROS_DOMAIN_ID': ROS_DOMAIN_ID},
     )
     return (
         launch.LaunchDescription(
             [
-                # Isolated test environment
-                launch.actions.SetEnvironmentVariable('ROS_DOMAIN_ID', ROS_DOMAIN_ID),
                 # Nodes under test
                 impedance_controller_node,
                 # Launch tests 0.5 s later
@@ -46,7 +45,6 @@ class TestImpedanceController(unittest.TestCase):
     """Active integration tests while the node is running."""
     @classmethod
     def setUpClass(cls):
-        os.environ["ROS_DOMAIN_ID"] = ROS_DOMAIN_ID
         rclpy.init()
 
     @classmethod
@@ -62,11 +60,23 @@ class TestImpedanceController(unittest.TestCase):
     def test_publishes_zero_torque(self, proc_output):
         """Check whether torque messages get zeroed out."""
         msgs_rx = []
+        pub = self.node.create_publisher(
+            std_msgs.msg.Float32MultiArray, INPUT_TOPIC, 100)
+        srv1 = self.node.create_client(
+            std_srvs.srv.SetBool, SERVICE_TOPIC_1)
+        srv2 = self.node.create_client(
+            std_srvs.srv.SetBool, SERVICE_TOPIC_2)
+        # request gravity compensation disabled
+        future = srv1.call_async(std_srvs.srv.SetBool.Request(data=False))
+        rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
+        assert future.result() is not None and future.result().success
+        # request impedance control enabled
+        future = srv2.call_async(std_srvs.srv.SetBool.Request(data=True))
+        rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
+        assert future.result() is not None and future.result().success
         sub = self.node.create_subscription(
             std_msgs.msg.Float32MultiArray, OUTPUT_TOPIC,
             lambda msg: msgs_rx.append(msg), 100)
-        pub = self.node.create_publisher(
-            std_msgs.msg.Float32MultiArray, INPUT_TOPIC, 100)
         try:
             # Listen to the torque topic for TEST_TIMEOUT_SEC seconds while publishing NaN torques
             end_time = time.time() + TEST_TIMEOUT_SEC
@@ -80,3 +90,5 @@ class TestImpedanceController(unittest.TestCase):
         finally:
             self.node.destroy_subscription(sub)
             self.node.destroy_publisher(pub)
+            self.node.destroy_client(srv1)
+            self.node.destroy_client(srv2)

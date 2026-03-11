@@ -10,7 +10,6 @@ import launch_testing
 import rclpy
 import std_msgs.msg
 
-ROS_DOMAIN_ID = "3"
 
 def generate_test_description():
     """Generate the launch description for integration tests."""
@@ -19,13 +18,10 @@ def generate_test_description():
         namespace='',
         executable='impedance_controller_node',
         name='impedance_controller',
-        additional_env={'ROS_DOMAIN_ID': ROS_DOMAIN_ID},
     )
     return (
         launch.LaunchDescription(
             [
-                # Isolated test environment
-                launch.actions.SetEnvironmentVariable('ROS_DOMAIN_ID', ROS_DOMAIN_ID),
                 # Nodes under test
                 impedance_controller_node,
                 # Launch tests 0.5 s later
@@ -40,7 +36,6 @@ class TestImpedanceController(unittest.TestCase):
     """Active integration tests while the node is running."""
     @classmethod
     def setUpClass(cls):
-        os.environ["ROS_DOMAIN_ID"] = ROS_DOMAIN_ID
         rclpy.init()
 
     @classmethod
@@ -56,7 +51,7 @@ class TestImpedanceController(unittest.TestCase):
     def test_logs_spawning(self, proc_output):
         """Check whether logging properly."""
         proc_output.assertWaitFor(
-            'Constructing... Impedance Controller Node',
+            'Constructing... Combined Controller Node',
             timeout=5, stream='stderr')
 
 @launch_testing.post_shutdown_test()
@@ -66,7 +61,7 @@ class TestImpedanceControllerShutdown(unittest.TestCase):
         """Check whether logging properly."""
         launch_testing.asserts.assertInStderr(
             proc_output,
-            'Destructing... Impedance Controller Node',
+            'Destructing... Combined Controller Node',
             process=impedance_controller_node
         )
 
