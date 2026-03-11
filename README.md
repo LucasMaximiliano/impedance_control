@@ -80,6 +80,19 @@ colcon test-result --all --verbose
 ```
 The `--verbose` flag is optional and provides more detailed output. This will generate a detailed report of the test results, including any failures or errors encountered during testing.
 
+## Visualization
+Foxglove is a third-party software tool to interact with ROS2 data. It can handle recorded data e.g. via ROS bags or real time data from ROS interfaces (topics, services, actions). Here are the steps to use the impedance controller together with Foxglove:
+1. Install [Foxglove Studio](https://foxglove.dev/download/) on the host machine. If for some reason you can't install it, you can also use the [web version](https://studio.foxglove.dev/).
+2. Go to the "Layouts" section, click on the "Add" button and select "Import Layout from File". Then, select the `impedance_controller/foxglove_layout.json` file.
+3. Inside the docker container, start the ROS2 impedance controller node as described in the [Build & Run](#build--run) section.
+4. Inside the docker container, start the Foxglove websocket bridge by running the following command:
+``` bash
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml
+```
+5. Go back to Foxglove Studio and add a new ROS2 connection by clicking on the "Open connection" button in the "Data sources" panel.
+6. Select the websocket option and set the URL to `ws://localhost:8765`.
+7. Click on "Connect" to start receiving data from the PDS.
+
 ## Documentation
 The implementation of the impedance controller is documented using Doxygen. To generate the documentation, navigate to the `docs/` directory and run:
 ```bash
