@@ -19,7 +19,16 @@ class CombinedControllerBase : public ImpedanceControllerBase
 public:
     //! \name Constructor & Destructor
     //! \{
-    CombinedControllerBase();
+    CombinedControllerBase(
+      const Eigen::Matrix2d & virtual_inertia_matrix,
+      const Eigen::Matrix2d & virtual_damping_matrix,
+      const Eigen::Matrix2d & virtual_stiffness_matrix,
+      const double force_feedback_gain,
+      const Eigen::Vector2d & link_mass_vector,
+      const Eigen::Vector2d & link_length_vector,
+      const Eigen::Vector2d & dist_to_link_com_vector,
+      const double max_actuator_torque,
+      const int control_loop_duration);
     ~CombinedControllerBase();
     //! \}
 
@@ -32,9 +41,19 @@ public:
     //! \{
     void setImpedanceControlEnabled(const bool enable) { impedance_control_enabled_ = enable; }
     void setGravityCompensationEnabled(const bool enable) { gravity_compensation_enabled_ = enable; }
-    void setVirtualInertiaMatrix(const double gain) { virtual_inertia_matrix_ = gain * Eigen::Matrix2d::Identity(); }
-    void setVirtualDampingMatrix(const double gain) { virtual_damping_matrix_ = gain * Eigen::Matrix2d::Identity(); }
-    void setVirtualStiffnessMatrix(const double gain) { virtual_stiffness_matrix_ = gain * Eigen::Matrix2d::Identity(); }
+    void setVirtualInertiaMatrix(const double gain)
+    {
+      ImpedanceControllerBase::setVirtualInertiaMatrix(gain * Eigen::Matrix2d::Identity());
+    }
+    void setVirtualDampingMatrix(const double gain)
+    {
+      ImpedanceControllerBase::setVirtualDampingMatrix(gain * Eigen::Matrix2d::Identity());
+    }
+    
+    void setVirtualStiffnessMatrix(const double gain)
+    {
+      ImpedanceControllerBase::setVirtualStiffnessMatrix(gain * Eigen::Matrix2d::Identity());
+    }
     //! \}
 
     //! \name Getters
@@ -52,6 +71,6 @@ public:
 private:
     bool impedance_control_enabled_;
     bool gravity_compensation_enabled_;
-}
+};
 
 #endif // COMBINED_CONTROLLER_BASE_HPP

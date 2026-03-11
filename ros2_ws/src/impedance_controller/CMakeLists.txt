@@ -43,6 +43,7 @@ target_link_libraries(impedance_controller_node
 ament_target_dependencies(impedance_controller_node
   rclcpp
   std_msgs
+  std_srvs
   ament_index_cpp
   impedance_controller_interfaces
 )

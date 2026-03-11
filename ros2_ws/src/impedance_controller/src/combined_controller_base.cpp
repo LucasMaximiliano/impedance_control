@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Eigen/Dense>
+#include "combined_controller_base.hpp"
 #include "gravity_compensation.hpp"
 
 CombinedControllerBase::CombinedControllerBase(
@@ -57,12 +58,12 @@ Eigen::Vector2d CombinedControllerBase::computeCombinedTorque()
                 << std::endl;
       combined_torque.setZero();
     }
-    if (combined_torque.cwiseAbs().maxCoeff() > max_actuator_torque_) {
+    if (combined_torque.cwiseAbs().maxCoeff() > getMaxActuatorTorque()) {
       std::cerr <<
         "[CombinedControllerBase] Warning: Computed joint torque exceeds maximum actuator torque. Clamping value to"
-                << max_actuator_torque_ << " Nm." << std::endl;
-      combined_torque = combined_torque.cwiseMin(max_actuator_torque_).cwiseMax(
-        -max_actuator_torque_);
+                << getMaxActuatorTorque() << " Nm." << std::endl;
+      combined_torque = combined_torque.cwiseMin(getMaxActuatorTorque()).cwiseMax(
+        -getMaxActuatorTorque());
     }
     return combined_torque;
 }

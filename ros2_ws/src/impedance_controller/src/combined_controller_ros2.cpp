@@ -64,7 +64,7 @@ CombinedControllerROS2::CombinedControllerROS2()
     PUBLISH_TORQUE_CMD_TOPIC, QUEUE_SIZE);
   // Subscribers
   measured_position_subscription_ = this->create_subscription<std_msgs::msg::Float64MultiArray>(
-    SUBSCRIBE_MEASURED_POSITION_TOPIC, SUBSCRIBE_MEASURED_POSITION_QUEUE_SIZE,
+    SUBSCRIBE_MEASURED_POSITION_TOPIC, QUEUE_SIZE,
     [this](const std_msgs::msg::Float64MultiArray::SharedPtr msg) {
       if (msg->data.size() >= 8) {
         // Parse message content
