@@ -27,8 +27,8 @@ CombinedControllerBase::CombinedControllerBase(
       gravity_compensation_enabled_(false)
 {
     std::cout << "[CombinedControllerBase] Constructor called with..." << std::endl;
-    std::cout << "  Impedance control: " << impedance_control_enabled_ << std::endl;
-    std::cout << "  Gravity compensation: " << gravity_compensation_enabled_ << std::endl;
+    std::cout << "  Impedance control: " << (impedance_control_enabled_ ? "Enabled" : "Disabled") << std::endl;
+    std::cout << "  Gravity compensation: " << (gravity_compensation_enabled_ ? "Enabled" : "Disabled") << std::endl;
 }
 
 CombinedControllerBase::~CombinedControllerBase()

@@ -21,12 +21,14 @@
 #define SET_STIFFNESS_GAIN_SERVICE "/set_stiffness_gain"
 #define SET_TORQUE_GAIN_SERVICE "/set_torque_gain"
 
-static CombinedControllerBase initializeController()
+static CombinedControllerBase initializeController(const int controller_id)
 {
   std::string package_share_directory = ament_index_cpp::get_package_share_directory(
     "impedance_controller");
   std::string toml_path = package_share_directory + "/config.toml";
   impedance_controller_params::params_t params(toml_path);
+
+  std::cout << "\n================\n" << "[CombinedControllerBase] Initializing controller for finger " << controller_id << std::endl;
 
   return CombinedControllerBase(
     params.virtual_inertia_matrix_,
@@ -42,10 +44,10 @@ static CombinedControllerBase initializeController()
 
 CombinedControllerROS2::CombinedControllerROS2()
 : Node("impedance_controller_node"),
-  combined_controller_1_(initializeController()),
-  combined_controller_2_(initializeController()),
-  combined_controller_3_(initializeController()),
-  combined_controller_4_(initializeController())
+  combined_controller_1_(initializeController(1)),
+  combined_controller_2_(initializeController(2)),
+  combined_controller_3_(initializeController(3)),
+  combined_controller_4_(initializeController(4))
 {
   RCLCPP_INFO(this->get_logger(), "Constructing... Combined Controller Node");
 

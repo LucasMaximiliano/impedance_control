@@ -63,7 +63,7 @@ source install/setup.bash
 ```
 and execute the application with
 ``` bash
-ros2 run impedance_controller main
+ros2 run impedance_controller impedance_controller_node
 ```
 
 ### Testing
