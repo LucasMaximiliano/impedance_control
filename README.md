@@ -46,11 +46,14 @@ Once you're satisfied with your work, leave the container **first** and perform 
 
 ## Usage
 ### Configuration
-To configure the impedance controller, modify the parameters in the `config.toml` file located in the `impedance_controller` package directory. The parameters include the
+To configure the impedance controller, modify the initialization parameters in the `config.toml` file located in the `impedance_controller/` package directory. Additionally, the following parameters can be updated dynamically at runtime, either via a [GUI](#visualization) or through ROS2 service calls: 
 - virtual stiffness matrix,
 - virtual damping matrix,
 - virtual inertia matrix, and
 - torque feedback gain.
+
+> **Note:** The setters for the matrices take a scalar value and set the corresponding matrix to a scaled identity matrix. This is a common approach for tuning the controller with a single gain parameter. However, the software can be easily extended to allow setting full matrices, if needed.
+
 ### Build & Run
 To build the ROS2 workspace, go to the `ros2_ws` directory and run
 ``` bash
