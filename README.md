@@ -91,7 +91,7 @@ ros2 launch foxglove_bridge foxglove_bridge_launch.xml
 ```
 5. Go back to Foxglove Studio and add a new ROS2 connection by clicking on the "Open connection" button in the "Data sources" panel.
 6. Select the websocket option and set the URL to `ws://localhost:8765`.
-7. Click on "Connect" to start receiving data from the PDS.
+7. Click on "Connect" to start receiving data from the impedance controller node.
 
 ## Documentation
 The implementation of the impedance controller is documented using Doxygen. To generate the documentation, navigate to the `docs/` directory and run:
