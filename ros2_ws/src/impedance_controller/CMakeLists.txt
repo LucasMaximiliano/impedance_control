@@ -17,14 +17,16 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(Eigen3 REQUIRED)
-# find_package(impedance_controller_msgs REQUIRED) # This package is not yet needed, but might be in the future when we add custom messages.
+find_package(impedance_controller_interfaces REQUIRED)
 find_package(impedance_controller_params REQUIRED)
 
 add_executable(impedance_controller_node
   src/main.cpp
   src/impedance_controller_base.cpp
-  src/impedance_controller_ros2.cpp
+  src/combined_controller_base.cpp
+  src/combined_controller_ros2.cpp
 )
 
 target_include_directories(impedance_controller_node
@@ -42,7 +44,7 @@ ament_target_dependencies(impedance_controller_node
   rclcpp
   std_msgs
   ament_index_cpp
-  # impedance_controller_msgs # See comment above about this package.
+  impedance_controller_interfaces
 )
 
 install(TARGETS impedance_controller_node
@@ -60,7 +62,8 @@ install(FILES config.toml # impedance_controller_foxglove_layout.json # This fil
 ament_export_dependencies(
   rclcpp
   std_msgs
-  # impedance_controller_msgs # See comment above about this package.
+  std_srvs
+  impedance_controller_interfaces
   impedance_controller_params
 )
 

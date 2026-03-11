@@ -11,11 +11,13 @@
 
   <build_depend>rclcpp</build_depend>
   <build_depend>std_msgs</build_depend>
-  <!-- <build_depend>impedance_controller_msgs</build_depend> This package is not yet needed, but might be in the future when we add custom messages. -->
+  <build_depend>std_srvs</build_depend>
+  <build_depend>impedance_controller_interfaces</build_depend>
 
-  <!-- <exec_depend>impedance_controller_msgs</exec_depend> See comment about this pkg above. -->
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <exec_depend>impedance_controller_interfaces</exec_depend>
   
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
