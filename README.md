@@ -6,6 +6,21 @@
 This package provides an impedance controller for the robot fingers in the SeaClear2.0 grapple. It consists of a base C++ library and a ROS2 wrapper for ease of integration with the rest of the system. A Docker container with all necessary dependencies is provided for plug-and-play deployment.
 
 ## Set-Up
+### FastDDS Discovery Server
+To enable communication between the ROS2 nodes running inside the docker container and the rest of the system, a FastDDS discovery server is required. This is because the ROS2 nodes inside the container need to discover and communicate with the ROS2 nodes running on the host machine and other devices (e.g. other containers) in the network.
+
+1. Install FastDDS on the host machine by following the instructions in the [FastDDS documentation](https://fast-dds.docs.eprosima.com/en/latest/index.html).
+2. Find the IP address of the host machine:
+``` bash
+ip addr show
+```
+3. Update the IP address in the `docker/fastdds_client_profile.xml` file to match the IP address of the host machine.
+4. Start the FastDDS discovery server on the host machine. Replace `-l 192.168.2.95` with the IP address of your host machine:
+``` bash
+fastdds discovery -i 0 -l 192.168.2.95 -p 11815
+```
+
+### Docker
 To enable easy deployment of the code, and to support different operating systems/versions, [docker](https://www.docker.com/) is used. Below is a brief guide on how to use docker for this specific application.
 
 1. Make sure you're in the `docker` directory of the repo

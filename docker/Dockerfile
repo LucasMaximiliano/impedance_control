@@ -33,5 +33,10 @@ ENV LC_ALL=C.UTF-8
 # Workdir for builds
 WORKDIR /impedance_control
 
+# FastDDS set-up
+COPY fastdds_client_profile.xml /etc/fastdds_client_profile.xml
+ENV FASTRTPS_DEFAULT_PROFILES_FILE=/etc/fastdds_client_profile.xml
+ENV ROS_LOCALHOST_ONLY=0
+
 # Expose the default Foxglove port
 EXPOSE 8765
