@@ -99,6 +99,7 @@ ros2 launch foxglove_bridge foxglove_bridge_launch.xml
 7. Click on "Connect" to start receiving data from the impedance controller node.
 
 ## Documentation
+### Doxygen
 The implementation of the impedance controller is documented using Doxygen. To generate the documentation, navigate to the `docs/` directory and run:
 ```bash
 doxygen Doxyfile
@@ -109,7 +110,7 @@ make
 ```
 The resulting `refman.pdf` file contains the complete documentation.
 
-## Further resources
+### Developer Notes
 For more information on the impedance control algorithm, refer to the [developer notes](https://sharelatex.tum.de/project/694488e4bccf9df893153f9d). The latest version is also available in the `docs/` directory.
 
 ## Contact
