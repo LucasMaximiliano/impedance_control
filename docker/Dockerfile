@@ -10,6 +10,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       libeigen3-dev \
       build-essential \
+      iputils-ping \
       cmake \
       git \
       doxygen \
