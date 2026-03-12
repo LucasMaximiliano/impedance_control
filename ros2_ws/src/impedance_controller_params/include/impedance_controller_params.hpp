@@ -10,6 +10,25 @@
 //! \param toml_path Path to the TOML configuration file
 namespace impedance_controller_params {
     //! \{
+    //! \name limits
+    //! \brief Limits for the impedance controller parameters
+    constexpr int    MAX_SENSOJOINT_TORQUE     = 120;  //!< Maximal possible torque for the SensoJoint actuator in Nm (absolute value)
+    constexpr double MAX_FORCE_FEEDBACK_GAIN   = 1.0;  //!< Maximal force feedback gain. Above 1 stability is not guaranteed.
+    constexpr int    MIN_CONTROL_LOOP_DURATION = 1;    //!< Minimal control loop duration in ms (1 kHz)
+    constexpr int    MAX_CONTROL_LOOP_DURATION = 1000; //!< Maximal control loop duration in ms (1 Hz)
+    //! \}
+
+    //! \{
+    //! \name validators
+    //! \brief Validator helpers for the impedance controller parameters
+    void require_condition(const bool condition, const std::string& message);       //!< Throws a runtime error if the condition is not met
+    void validate_vec(const Eigen::Vector2d& vec, const std::string& name);         //!< Validates that a 2x2 vector is non-negative
+    void validate_mat(const Eigen::Matrix2d& mat, const std::string& name);         //!< Validates that a 2x2 matrix is positive semi-definite
+    template <typename T> void validate_range(const T value, const T min_value,
+        const T max_value, const std::string& name);                                //!< Validates that a value is within a specified range
+    //! \}
+    
+    //! \{
     //! \name params_t
     //! \brief Structure to hold impedance controller parameters
     struct params_t {
