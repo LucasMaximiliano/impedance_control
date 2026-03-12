@@ -1,6 +1,7 @@
 #include "combined_controller_ros2.hpp"
 #include "impedance_controller_params.hpp"
 #include "finger_kinematics.hpp"
+#include "coordinate_transform.hpp"
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
 // Macros for topic names, service names, and queue size
@@ -74,6 +75,11 @@ CombinedControllerROS2::CombinedControllerROS2()
         Eigen::Vector2d joint_position_2(msg->data[2], msg->data[3]);
         Eigen::Vector2d joint_position_3(msg->data[4], msg->data[5]);
         Eigen::Vector2d joint_position_4(msg->data[6], msg->data[7]);
+        // Perform coordinate transformation
+        joint_position_1 = coordinate_transform::incoming_angles_to_DH_angles(joint_position_1);
+        joint_position_2 = coordinate_transform::incoming_angles_to_DH_angles(joint_position_2);
+        joint_position_3 = coordinate_transform::incoming_angles_to_DH_angles(joint_position_3);
+        joint_position_4 = coordinate_transform::incoming_angles_to_DH_angles(joint_position_4);
         // Set measured joint positions for all four fingers (2 joints per finger)
         combined_controller_1_.setJointPositionMeasured(joint_position_1);
         combined_controller_2_.setJointPositionMeasured(joint_position_2);
@@ -104,6 +110,11 @@ CombinedControllerROS2::CombinedControllerROS2()
         Eigen::Vector2d joint_velocity_2(msg->data[2], msg->data[3]);
         Eigen::Vector2d joint_velocity_3(msg->data[4], msg->data[5]);
         Eigen::Vector2d joint_velocity_4(msg->data[6], msg->data[7]);
+        // Perform coordinate transformation
+        joint_velocity_1 = coordinate_transform::incoming_velocities_to_DH_velocities(joint_velocity_1);
+        joint_velocity_2 = coordinate_transform::incoming_velocities_to_DH_velocities(joint_velocity_2);
+        joint_velocity_3 = coordinate_transform::incoming_velocities_to_DH_velocities(joint_velocity_3);
+        joint_velocity_4 = coordinate_transform::incoming_velocities_to_DH_velocities(joint_velocity_4);
         // Set measured joint velocities for all four fingers (2 joints per finger)
         combined_controller_1_.setJointVelocityMeasured(joint_velocity_1);
         combined_controller_2_.setJointVelocityMeasured(joint_velocity_2);
@@ -133,10 +144,21 @@ CombinedControllerROS2::CombinedControllerROS2()
     SUBSCRIBE_MEASURED_TORQUE_TOPIC, QUEUE_SIZE,
     [this](const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
       if (msg->data.size() >= 8) {
-        combined_controller_1_.setJointTorqueMeasured(Eigen::Vector2d(msg->data[0], msg->data[1]));
-        combined_controller_2_.setJointTorqueMeasured(Eigen::Vector2d(msg->data[2], msg->data[3]));
-        combined_controller_3_.setJointTorqueMeasured(Eigen::Vector2d(msg->data[4], msg->data[5]));
-        combined_controller_4_.setJointTorqueMeasured(Eigen::Vector2d(msg->data[6], msg->data[7]));
+        // Parse message content
+        Eigen::Vector2d joint_torque_1(msg->data[0], msg->data[1]);
+        Eigen::Vector2d joint_torque_2(msg->data[2], msg->data[3]);
+        Eigen::Vector2d joint_torque_3(msg->data[4], msg->data[5]);
+        Eigen::Vector2d joint_torque_4(msg->data[6], msg->data[7]);
+        // Perform coordinate transformation
+        joint_torque_1 = coordinate_transform::incoming_torques_to_DH_torques(joint_torque_1);
+        joint_torque_2 = coordinate_transform::incoming_torques_to_DH_torques(joint_torque_2);
+        joint_torque_3 = coordinate_transform::incoming_torques_to_DH_torques(joint_torque_3);
+        joint_torque_4 = coordinate_transform::incoming_torques_to_DH_torques(joint_torque_4);
+        // Set measured joint torques for all four fingers (2 joints per finger)
+        combined_controller_1_.setJointTorqueMeasured(joint_torque_1);
+        combined_controller_2_.setJointTorqueMeasured(joint_torque_2);
+        combined_controller_3_.setJointTorqueMeasured(joint_torque_3);
+        combined_controller_4_.setJointTorqueMeasured(joint_torque_4);
       }
     }
   );
@@ -149,6 +171,11 @@ CombinedControllerROS2::CombinedControllerROS2()
         Eigen::Vector2d joint_position_2(msg->data[2], msg->data[3]);
         Eigen::Vector2d joint_position_3(msg->data[4], msg->data[5]);
         Eigen::Vector2d joint_position_4(msg->data[6], msg->data[7]);
+        // Perform coordinate transformation
+        joint_position_1 = coordinate_transform::incoming_angles_to_DH_angles(joint_position_1);
+        joint_position_2 = coordinate_transform::incoming_angles_to_DH_angles(joint_position_2);
+        joint_position_3 = coordinate_transform::incoming_angles_to_DH_angles(joint_position_3);
+        joint_position_4 = coordinate_transform::incoming_angles_to_DH_angles(joint_position_4);
         // Set desired joint positions for all four fingers (2 joints per finger)
         combined_controller_1_.setJointPositionDesired(joint_position_1);
         combined_controller_2_.setJointPositionDesired(joint_position_2);
@@ -174,10 +201,17 @@ CombinedControllerROS2::CombinedControllerROS2()
     SUBSCRIBE_DESIRED_VELOCITY_TOPIC, QUEUE_SIZE,
     [this](const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
       if (msg->data.size() >= 8) {
+        // Parse message content
         Eigen::Vector2d desired_joint_velocity_1(msg->data[0], msg->data[1]);                                                                                   /* TODO: Check units */
         Eigen::Vector2d desired_joint_velocity_2(msg->data[2], msg->data[3]);                                                                                   /* TODO: Check units */
         Eigen::Vector2d desired_joint_velocity_3(msg->data[4], msg->data[5]);                                                                                   /* TODO: Check units */
         Eigen::Vector2d desired_joint_velocity_4(msg->data[6], msg->data[7]);                                                                                   /* TODO: Check units */
+        // Perform coordinate transform
+        desired_joint_velocity_1 = coordinate_transform::incoming_velocities_to_DH_velocities(desired_joint_velocity_1);
+        desired_joint_velocity_2 = coordinate_transform::incoming_velocities_to_DH_velocities(desired_joint_velocity_2);
+        desired_joint_velocity_3 = coordinate_transform::incoming_velocities_to_DH_velocities(desired_joint_velocity_3);
+        desired_joint_velocity_4 = coordinate_transform::incoming_velocities_to_DH_velocities(desired_joint_velocity_4);
+        // Set desired Cartesian velocities for all four fingers using Jacobian
         combined_controller_1_.setCartesianVelocityDesired(
           finger_kinematics::jacobian(
             combined_controller_1_.getJointPositionDesired(),
@@ -241,7 +275,7 @@ CombinedControllerROS2::CombinedControllerROS2()
       } catch (const std::exception& e) {
         response->success = false;
         response->message = std::string("Ignored invalid inertia gain: ") + e.what() +
-          " Must be between 0 and +infty so the matrix is p.s.d.";
+          " Must be between 0 and +inf so the matrix is p.s.d.";
         RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
       }
     }
@@ -263,7 +297,7 @@ CombinedControllerROS2::CombinedControllerROS2()
       } catch (const std::exception& e) {
         response->success = false;
         response->message = std::string("Ignored invalid damping gain: ") + e.what() +
-          " Must be between 0 and +infty so the matrix is p.s.d.";
+          " Must be between 0 and +inf so the matrix is p.s.d.";
         RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
       }
     }
@@ -285,7 +319,7 @@ CombinedControllerROS2::CombinedControllerROS2()
       } catch (const std::exception& e) {
         response->success = false;
         response->message = std::string("Ignored invalid stiffness gain: ") + e.what() +
-          " Must be between 0 and +infty so the matrix is p.s.d.";
+          " Must be between 0 and +inf so the matrix is p.s.d.";
         RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
       }
     }
@@ -328,7 +362,11 @@ void CombinedControllerROS2::controlLoopCallback()
   Eigen::Vector2d torque_command_2 = combined_controller_2_.computeCombinedTorque();
   Eigen::Vector2d torque_command_3 = combined_controller_3_.computeCombinedTorque();
   Eigen::Vector2d torque_command_4 = combined_controller_4_.computeCombinedTorque();
-
+  // Perform coordinate transform
+  torque_command_1 = coordinate_transform::DH_torques_to_outgoing_torques(torque_command_1); 
+  torque_command_2 = coordinate_transform::DH_torques_to_outgoing_torques(torque_command_2); 
+  torque_command_3 = coordinate_transform::DH_torques_to_outgoing_torques(torque_command_3); 
+  torque_command_4 = coordinate_transform::DH_torques_to_outgoing_torques(torque_command_4); 
   // Publish torque commands as a single message
   std_msgs::msg::Float32MultiArray command_msg;
   command_msg.data = {

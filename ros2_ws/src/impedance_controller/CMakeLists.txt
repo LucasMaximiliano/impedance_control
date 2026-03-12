@@ -56,7 +56,7 @@ install(DIRECTORY include/
   DESTINATION include/
 )
 
-install(FILES config.toml # impedance_controller_foxglove_layout.json # This file is not yet needed, but might be in the future when we add a custom Foxglove layout.
+install(FILES config.toml foxglove_layout.json
   DESTINATION share/${PROJECT_NAME}/
 )
 
