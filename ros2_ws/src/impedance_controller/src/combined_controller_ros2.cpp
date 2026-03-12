@@ -9,9 +9,9 @@
 
 #define PUBLISH_TORQUE_CMD_TOPIC "/command/set_torque_nm"
 
-#define SUBSCRIBE_MEASURED_POSITION_TOPIC "/position_rad"
-#define SUBSCRIBE_MEASURED_VELOCITY_TOPIC "/velocity_rad_per_sec"
-#define SUBSCRIBE_MEASURED_TORQUE_TOPIC "/torque_nm"
+#define SUBSCRIBE_MEASURED_POSITION_TOPIC "/senso_joint/position_rad"
+#define SUBSCRIBE_MEASURED_VELOCITY_TOPIC "/senso_joint/velocity_rad_per_sec"
+#define SUBSCRIBE_MEASURED_TORQUE_TOPIC "/senso_joint/torque_nm"
 #define SUBSCRIBE_DESIRED_POSITION_TOPIC "/desired_joint_position_rad"          // TODO: Check name with Ian
 #define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/desired_joint_velocity_rad_per_sec"  // TODO: Check name with Ian
 
