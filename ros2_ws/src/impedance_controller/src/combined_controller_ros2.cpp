@@ -10,10 +10,10 @@
 #define PUBLISH_TORQUE_CMD_TOPIC "/command/set_torque_nm"
 
 #define SUBSCRIBE_MEASURED_POSITION_TOPIC "/position_rad"
-#define SUBSCRIBE_MEASURED_VELOCITY_TOPIC "/velocity"
+#define SUBSCRIBE_MEASURED_VELOCITY_TOPIC "/velocity_rad_per_sec"
 #define SUBSCRIBE_MEASURED_TORQUE_TOPIC "/torque_nm"
-#define SUBSCRIBE_DESIRED_POSITION_TOPIC "/desired_joint_position_rad"
-#define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/desired_joint_velocity"
+#define SUBSCRIBE_DESIRED_POSITION_TOPIC "/desired_joint_position_rad"          // TODO: Check name with Ian
+#define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/desired_joint_velocity_rad_per_sec"  // TODO: Check name with Ian
 
 #define ENABLE_IMPEDANCE_TORQUE_SERVICE "/impedance_control_enabled"
 #define ENABLE_GRAVITY_COMPENSATION_SERVICE "/gravity_compensation_enabled"
@@ -202,10 +202,10 @@ CombinedControllerROS2::CombinedControllerROS2()
     [this](const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
       if (msg->data.size() >= 8) {
         // Parse message content
-        Eigen::Vector2d desired_joint_velocity_1(msg->data[0], msg->data[1]);                                                                                   /* TODO: Check units */
-        Eigen::Vector2d desired_joint_velocity_2(msg->data[2], msg->data[3]);                                                                                   /* TODO: Check units */
-        Eigen::Vector2d desired_joint_velocity_3(msg->data[4], msg->data[5]);                                                                                   /* TODO: Check units */
-        Eigen::Vector2d desired_joint_velocity_4(msg->data[6], msg->data[7]);                                                                                   /* TODO: Check units */
+        Eigen::Vector2d desired_joint_velocity_1(msg->data[0], msg->data[1]); // TODO: Check units with Ian
+        Eigen::Vector2d desired_joint_velocity_2(msg->data[2], msg->data[3]); // TODO: Check units with Ian
+        Eigen::Vector2d desired_joint_velocity_3(msg->data[4], msg->data[5]); // TODO: Check units with Ian
+        Eigen::Vector2d desired_joint_velocity_4(msg->data[6], msg->data[7]); // TODO: Check units with Ian
         // Perform coordinate transform
         desired_joint_velocity_1 = coordinate_transform::incoming_velocities_to_DH_velocities(desired_joint_velocity_1);
         desired_joint_velocity_2 = coordinate_transform::incoming_velocities_to_DH_velocities(desired_joint_velocity_2);
