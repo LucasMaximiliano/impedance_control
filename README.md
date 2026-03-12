@@ -20,9 +20,9 @@ docker build -t impedance_controller_ros2_image:dev .
 ``` bash
 docker run -it \
     --name impedance_controller_dev_container \
-    -e DISPLAY=$DISPLAY \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    -p 8765:8765 \
+    --network host \
+    --ipc=host \
+    -e ROS_DOMAIN_ID=8 \
     -v /Users/lucas/dev/seaclear2.0/impedance-control/impedance_control/:/impedance_control \
     impedance_controller_ros2_image:dev
 ```
