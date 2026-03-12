@@ -50,4 +50,4 @@ dist_to_com_vector = [0.28, 0.19]
 ##########################
 
 # Maximal torque (scalar) in Nm
-max_actuator_torque = 30
+max_actuator_torque = 10
