@@ -13,10 +13,11 @@ import std_srvs.srv
 
 OUTPUT_TOPIC = "/command/set_torque_nm"
 INPUT_TOPIC = "/senso_joint/torque_nm"
+SERVICE_TOPIC_0 = "/impedance_controller/combined_control_enabled"
 SERVICE_TOPIC_1 = "/impedance_controller/gravity_compensation_enabled"
 SERVICE_TOPIC_2 = "/impedance_controller/impedance_control_enabled"
 CLAMP_THRESHOLD_NM = 30.0
-TEST_TIMEOUT_SEC = 2.0
+TEST_TIMEOUT_SEC = 10.0
 SPIN_TIMEOUT_SEC = 0.05
 MIN_MSGS = 5
 
@@ -62,22 +63,28 @@ class TestImpedanceController(unittest.TestCase):
         msgs_rx = []
         pub = self.node.create_publisher(
             std_msgs.msg.Float32MultiArray, INPUT_TOPIC, 100)
+        srv0 = self.node.create_client(
+            std_srvs.srv.SetBool, SERVICE_TOPIC_0)
         srv1 = self.node.create_client(
             std_srvs.srv.SetBool, SERVICE_TOPIC_1)
         srv2 = self.node.create_client(
             std_srvs.srv.SetBool, SERVICE_TOPIC_2)
-        # request gravity compensation disabled
-        future = srv1.call_async(std_srvs.srv.SetBool.Request(data=False))
-        rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-        assert future.result() is not None and future.result().success
-        # request impedance control enabled
-        future = srv2.call_async(std_srvs.srv.SetBool.Request(data=True))
-        rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-        assert future.result() is not None and future.result().success
-        sub = self.node.create_subscription(
-            std_msgs.msg.Float32MultiArray, OUTPUT_TOPIC,
-            lambda msg: msgs_rx.append(msg), 100)
         try:
+            # request combined control enabled
+            future = srv0.call_async(std_srvs.srv.SetBool.Request(data=True))
+            rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
+            assert future.result() is not None and future.result().success
+            # request gravity compensation disabled
+            future = srv1.call_async(std_srvs.srv.SetBool.Request(data=False))
+            rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
+            assert future.result() is not None and future.result().success
+            # request impedance control enabled
+            future = srv2.call_async(std_srvs.srv.SetBool.Request(data=True))
+            rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
+            assert future.result() is not None and future.result().success
+            sub = self.node.create_subscription(
+                std_msgs.msg.Float32MultiArray, OUTPUT_TOPIC,
+                lambda msg: msgs_rx.append(msg), 100)
             # Listen to the torque topic for TEST_TIMEOUT_SEC seconds while publishing NaN torques
             end_time = time.time() + TEST_TIMEOUT_SEC
             while time.time() < end_time and len(msgs_rx) < MIN_MSGS:

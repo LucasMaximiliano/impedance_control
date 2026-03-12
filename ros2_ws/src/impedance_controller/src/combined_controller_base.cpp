@@ -23,10 +23,12 @@ CombinedControllerBase::CombinedControllerBase(
         dist_to_link_com_vector,
         max_actuator_torque,
         control_loop_duration),
+      combined_control_enabled_(false),
       impedance_control_enabled_(false), 
       gravity_compensation_enabled_(false)
 {
     std::cout << "[CombinedControllerBase] Constructor called with..." << std::endl;
+    std::cout << "  Combined control: " << (combined_control_enabled_ ? "Enabled" : "Disabled") << std::endl;
     std::cout << "  Impedance control: " << (impedance_control_enabled_ ? "Enabled" : "Disabled") << std::endl;
     std::cout << "  Gravity compensation: " << (gravity_compensation_enabled_ ? "Enabled" : "Disabled") << std::endl;
 }

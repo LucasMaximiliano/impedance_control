@@ -15,6 +15,7 @@
 #define SUBSCRIBE_DESIRED_POSITION_TOPIC "/planner/desired_joint_position_rad"          // TODO: Check name with Ian
 #define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/planner/desired_joint_velocity_rad_per_sec"  // TODO: Check name with Ian
 
+#define ENABLE_COMBINED_CONTROL_SERVICE "/impedance_controller/combined_control_enabled"
 #define ENABLE_IMPEDANCE_TORQUE_SERVICE "/impedance_controller/impedance_control_enabled"
 #define ENABLE_GRAVITY_COMPENSATION_SERVICE "/impedance_controller/gravity_compensation_enabled"
 #define SET_INERTIA_GAIN_SERVICE "/impedance_controller/set_inertia_gain"
@@ -232,6 +233,19 @@ CombinedControllerROS2::CombinedControllerROS2()
     }
   );
   // Services
+  combined_control_enabled_service_ = this->create_service<std_srvs::srv::SetBool>(
+    ENABLE_COMBINED_CONTROL_SERVICE,
+    [this](const std_srvs::srv::SetBool::Request::SharedPtr request,
+           std_srvs::srv::SetBool::Response::SharedPtr response) {
+        combined_controller_1_.setCombinedControlEnabled(request->data);
+        combined_controller_2_.setCombinedControlEnabled(request->data);
+        combined_controller_3_.setCombinedControlEnabled(request->data);
+        combined_controller_4_.setCombinedControlEnabled(request->data);
+        
+        response->success = true;
+        response->message = request->data ? "Combined control enabled" : "Combined control disabled";
+    }
+  );
   impedance_control_enabled_service_ = this->create_service<std_srvs::srv::SetBool>(
     ENABLE_IMPEDANCE_TORQUE_SERVICE,
     [this](const std_srvs::srv::SetBool::Request::SharedPtr request,
@@ -367,12 +381,17 @@ void CombinedControllerROS2::controlLoopCallback()
   torque_command_2 = coordinate_transform::DH_torques_to_outgoing_torques(torque_command_2); 
   torque_command_3 = coordinate_transform::DH_torques_to_outgoing_torques(torque_command_3); 
   torque_command_4 = coordinate_transform::DH_torques_to_outgoing_torques(torque_command_4); 
-  // Publish torque commands as a single message
+  // Publish torque commands as a single message (if combined control is enabled)
   std_msgs::msg::Float32MultiArray command_msg;
   command_msg.data = {
     static_cast<float>(torque_command_1.x()), static_cast<float>(torque_command_1.y()),
     static_cast<float>(torque_command_2.x()), static_cast<float>(torque_command_2.y()),
     static_cast<float>(torque_command_3.x()), static_cast<float>(torque_command_3.y()),
     static_cast<float>(torque_command_4.x()), static_cast<float>(torque_command_4.y())};
-  torque_command_publisher_->publish(command_msg);
+  if (combined_controller_1_.getCombinedControlEnabled() &&
+      combined_controller_2_.getCombinedControlEnabled() &&
+      combined_controller_3_.getCombinedControlEnabled() &&
+      combined_controller_4_.getCombinedControlEnabled()) {
+    torque_command_publisher_->publish(command_msg);
+  }
 }

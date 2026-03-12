@@ -55,6 +55,7 @@ private:
   //! \name Services
   //! \brief ROS2 services for dynamically reconfiguring the controller at runtime.
   //! \{
+  rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr combined_control_enabled_service_;
   rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr impedance_control_enabled_service_;
   rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr gravity_compensation_enabled_service_;
   rclcpp::Service<impedance_controller_interfaces::srv::SetGain>::SharedPtr inertia_gain_service_;
