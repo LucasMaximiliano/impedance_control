@@ -1,12 +1,11 @@
-> ⚠️ **Warning**
->  
+> [!WARNING]
 > This package is still under development and not in a working state!
 
 # impedance_control
 This package provides an impedance controller for the robot fingers in the SeaClear2.0 grapple. It consists of a base C++ library and a ROS2 wrapper for ease of integration with the rest of the system. A Docker container with all necessary dependencies is provided for plug-and-play deployment.
 
 ## Set-Up
-### FastDDS Discovery Server
+### FastDDS
 To enable communication between the ROS2 nodes running inside the docker container and the rest of the system, a FastDDS discovery server is required. This is because the ROS2 nodes inside the container need to discover and communicate with the ROS2 nodes running on the host machine and other devices (e.g. other containers) in the network.
 
 1. Install FastDDS on the host machine by following the instructions in the [FastDDS documentation](https://fast-dds.docs.eprosima.com/en/latest/index.html).
@@ -15,7 +14,7 @@ To enable communication between the ROS2 nodes running inside the docker contain
 ip addr show
 ```
 3. Update the IP address in the `docker/fastdds_client_profile.xml` file to match the IP address of the host machine.
-4. Start the FastDDS discovery server on the host machine. Replace `-l 192.168.2.95` with the IP address of your host machine:
+4. Start the FastDDS discovery server on the host machine. Replace `192.168.2.95` with the IP address of your host machine:
 ``` bash
 fastdds discovery -i 0 -l 192.168.2.95 -p 11815
 ```
@@ -41,7 +40,8 @@ docker run -it \
     -v /Users/lucas/dev/seaclear2.0/impedance-control/impedance_control/:/impedance_control \
     impedance_controller_ros2_image:dev
 ```
-> **Note:** Remember to adjust the path `/Users/lucas/dev/seaclear2.0/impedance-control/impedance_control` when mounting the git directory depending on the file structure of your PC.
+> [!NOTE]
+> Remember to adjust the path `/Users/lucas/dev/seaclear2.0/impedance-control/impedance_control` when mounting the git directory depending on the file structure of your PC.
 
 After running the container for the first time, it will persist unless explicitly removed. In future sessions, the container can be accessed by starting and executing it with the name `impedance_controller_dev_container`:
 
@@ -53,6 +53,11 @@ docker start impedance_controller_dev_container
 2. Execute the container
 ``` bash
 docker exec -it impedance_controller_dev_container /bin/bash
+```
+
+After finishing the work, you can stop the container with
+``` bash
+docker stop impedance_controller_dev_container
 ```
 
 Always enter the docker container when developing. All the dependencies for the project are already set-up inside the container, so you don't have to worry about that.
@@ -67,7 +72,8 @@ To configure the impedance controller, modify the initialization parameters in t
 - virtual inertia matrix, and
 - torque feedback gain.
 
-> **Note:** The setters for the matrices take a scalar value and set the corresponding matrix to a scaled identity matrix. This is a common approach for tuning the controller with a single gain parameter. However, the software can be easily extended to allow setting full matrices, if needed.
+> [!NOTE]
+> The setters for the matrices take a scalar value and set the corresponding matrix to a scaled identity matrix. This is a common approach for tuning the controller with a single gain parameter. However, the software can be easily extended to allow setting full matrices, if needed.
 
 ### Build & Run
 To build the ROS2 workspace, go to the `ros2_ws` directory and run
@@ -100,6 +106,17 @@ colcon test-result --all --verbose
 ```
 The `--verbose` flag is optional and provides more detailed output. This will generate a detailed report of the test results, including any failures or errors encountered during testing.
 
+> [!WARNING]
+> The transition to FastDDS has broken the integration tests. The quick fix is to disable FastDDS in the active shell before running the tests. To do that, unset the following environment variables:
+> ``` bash
+> unset FASTRTPS_DEFAULT_PROFILES_FILE
+> unset ROS_DISCOVERY_SERVER
+> ```
+> Verify that FastDDS is disabled by running the command below. It should not return any output:
+> ``` bash
+> env | grep -E 'FASTRTPS_DEFAULT_PROFILES_FILE|ROS_DISCOVERY_SERVER'
+> ```
+
 ## Visualization
 Foxglove is a third-party software tool to interact with ROS2 data. It can handle recorded data e.g. via ROS bags or real time data from ROS interfaces (topics, services, actions). Here are the steps to use the impedance controller together with Foxglove:
 1. Install [Foxglove Studio](https://foxglove.dev/download/) on the host machine. If for some reason you can't install it, you can also use the [web version](https://studio.foxglove.dev/).
@@ -110,7 +127,7 @@ Foxglove is a third-party software tool to interact with ROS2 data. It can handl
 ros2 launch foxglove_bridge foxglove_bridge_launch.xml
 ```
 5. Go back to Foxglove Studio and add a new ROS2 connection by clicking on the "Open connection" button in the "Data sources" panel.
-6. Select the websocket option and set the URL to `ws://localhost:8765`.
+6. Select the websocket option and set the URL to `ws://localhost:8765`. If you're using Foxglove Studio from another device, replace `localhost` with the IP address of the host machine. For example, if the local host is the Zotac and you're using Foxglove Studio on your laptop, the URL should be `ws://192.168.2.95:8765`, where `192.168.2.95` is the IP address of the Zotac.
 7. Click on "Connect" to start receiving data from the impedance controller node.
 
 ## Documentation
