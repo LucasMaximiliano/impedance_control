@@ -130,8 +130,8 @@ class TestImpedanceController(unittest.TestCase):
             srv = self.node.create_client(
                 impedance_controller_interfaces.srv.SetGain, SERVICE_TOPIC_6)
             # request torque gain update
-            future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=5.0))
+            future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=0.5))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Torque gain updated to 5.000000"
+            assert future.result() is not None and future.result().success and future.result().message == "Torque gain updated to 0.500000"
         finally:
             self.node.destroy_client(srv)
