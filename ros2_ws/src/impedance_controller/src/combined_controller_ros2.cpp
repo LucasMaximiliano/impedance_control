@@ -202,12 +202,13 @@ CombinedControllerROS2::CombinedControllerROS2()
     ENABLE_IMPEDANCE_TORQUE_SERVICE,
     [this](const std_srvs::srv::SetBool::Request::SharedPtr request,
            std_srvs::srv::SetBool::Response::SharedPtr response) {
-      combined_controller_1_.setImpedanceControlEnabled(request->data);
-      combined_controller_2_.setImpedanceControlEnabled(request->data);
-      combined_controller_3_.setImpedanceControlEnabled(request->data);
-      combined_controller_4_.setImpedanceControlEnabled(request->data);
-      response->success = true;
-      response->message = request->data ? "Impedance control enabled" : "Impedance control disabled";
+        combined_controller_1_.setImpedanceControlEnabled(request->data);
+        combined_controller_2_.setImpedanceControlEnabled(request->data);
+        combined_controller_3_.setImpedanceControlEnabled(request->data);
+        combined_controller_4_.setImpedanceControlEnabled(request->data);
+        
+        response->success = true;
+        response->message = request->data ? "Impedance control enabled" : "Impedance control disabled";
     }
   );
   gravity_compensation_enabled_service_ = this->create_service<std_srvs::srv::SetBool>(
@@ -218,6 +219,7 @@ CombinedControllerROS2::CombinedControllerROS2()
       combined_controller_2_.setGravityCompensationEnabled(request->data);
       combined_controller_3_.setGravityCompensationEnabled(request->data);
       combined_controller_4_.setGravityCompensationEnabled(request->data);
+      
       response->success = true;
       response->message = request->data ? "Gravity compensation enabled" : "Gravity compensation disabled";
     }
