@@ -11,12 +11,12 @@ import rclpy
 import std_srvs.srv
 import impedance_controller_interfaces.srv
 
-SERVICE_TOPIC_1 = "/gravity_compensation_enabled"
-SERVICE_TOPIC_2 = "/impedance_control_enabled"
-SERVICE_TOPIC_3 = "/set_inertia_gain"
-SERVICE_TOPIC_4 = "/set_damping_gain"
-SERVICE_TOPIC_5 = "/set_stiffness_gain"
-SERVICE_TOPIC_6 = "/set_torque_gain"
+SERVICE_TOPIC_1 = "/impedance_controller/gravity_compensation_enabled"
+SERVICE_TOPIC_2 = "/impedance_controller/impedance_control_enabled"
+SERVICE_TOPIC_3 = "/impedance_controller/set_inertia_gain"
+SERVICE_TOPIC_4 = "/impedance_controller/set_damping_gain"
+SERVICE_TOPIC_5 = "/impedance_controller/set_stiffness_gain"
+SERVICE_TOPIC_6 = "/impedance_controller/set_torque_gain"
 TEST_TIMEOUT_SEC = 2.0
 
 def generate_test_description():

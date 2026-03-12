@@ -12,15 +12,15 @@
 #define SUBSCRIBE_MEASURED_POSITION_TOPIC "/senso_joint/position_rad"
 #define SUBSCRIBE_MEASURED_VELOCITY_TOPIC "/senso_joint/velocity_rad_per_sec"
 #define SUBSCRIBE_MEASURED_TORQUE_TOPIC "/senso_joint/torque_nm"
-#define SUBSCRIBE_DESIRED_POSITION_TOPIC "/desired_joint_position_rad"          // TODO: Check name with Ian
-#define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/desired_joint_velocity_rad_per_sec"  // TODO: Check name with Ian
+#define SUBSCRIBE_DESIRED_POSITION_TOPIC "/planner/desired_joint_position_rad"          // TODO: Check name with Ian
+#define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/planner/desired_joint_velocity_rad_per_sec"  // TODO: Check name with Ian
 
-#define ENABLE_IMPEDANCE_TORQUE_SERVICE "/impedance_control_enabled"
-#define ENABLE_GRAVITY_COMPENSATION_SERVICE "/gravity_compensation_enabled"
-#define SET_INERTIA_GAIN_SERVICE "/set_inertia_gain"
-#define SET_DAMPING_GAIN_SERVICE "/set_damping_gain"
-#define SET_STIFFNESS_GAIN_SERVICE "/set_stiffness_gain"
-#define SET_TORQUE_GAIN_SERVICE "/set_torque_gain"
+#define ENABLE_IMPEDANCE_TORQUE_SERVICE "/impedance_controller/impedance_control_enabled"
+#define ENABLE_GRAVITY_COMPENSATION_SERVICE "/impedance_controller/gravity_compensation_enabled"
+#define SET_INERTIA_GAIN_SERVICE "/impedance_controller/set_inertia_gain"
+#define SET_DAMPING_GAIN_SERVICE "/impedance_controller/set_damping_gain"
+#define SET_STIFFNESS_GAIN_SERVICE "/impedance_controller/set_stiffness_gain"
+#define SET_TORQUE_GAIN_SERVICE "/impedance_controller/set_torque_gain"
 
 static CombinedControllerBase initializeController(const int controller_id)
 {

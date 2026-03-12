@@ -12,9 +12,9 @@ import std_msgs.msg
 import std_srvs.srv
 
 OUTPUT_TOPIC = "/command/set_torque_nm"
-INPUT_TOPIC = "/torque_nm"
-SERVICE_TOPIC_1 = "/gravity_compensation_enabled"
-SERVICE_TOPIC_2 = "/impedance_control_enabled"
+INPUT_TOPIC = "/senso_joint/torque_nm"
+SERVICE_TOPIC_1 = "/impedance_controller/gravity_compensation_enabled"
+SERVICE_TOPIC_2 = "/impedance_controller/impedance_control_enabled"
 CLAMP_THRESHOLD_NM = 30.0
 TEST_TIMEOUT_SEC = 2.0
 SPIN_TIMEOUT_SEC = 0.05
