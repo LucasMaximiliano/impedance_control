@@ -21,10 +21,11 @@ namespace impedance_controller_params {
     //! \{
     //! \name validators
     //! \brief Validator helpers for the impedance controller parameters
-    void require_condition(const bool condition, const std::string& message);       //!< Throws a runtime error if the condition is not met
-    void validate_vec(const Eigen::Vector2d& vec, const std::string& name);         //!< Validates that a 2x2 vector is non-negative
-    void validate_mat(const Eigen::Matrix2d& mat, const std::string& name);         //!< Validates that a 2x2 matrix is positive semi-definite
-    template <typename T> void validate_range(const T value, const T min_value,
+    //! \returns true if the condition is met, otherwise throws a runtime error with the provided message
+    bool require_condition(const bool condition, const std::string& message);       //!< Throws a runtime error if the condition is not met
+    bool validate_vec(const Eigen::Vector2d& vec, const std::string& name);         //!< Validates that a 2x2 vector is non-negative
+    bool validate_mat(const Eigen::Matrix2d& mat, const std::string& name);         //!< Validates that a 2x2 matrix is positive semi-definite
+    template <typename T> bool validate_range(const T value, const T min_value,
         const T max_value, const std::string& name);                                //!< Validates that a value is within a specified range
     //! \}
     

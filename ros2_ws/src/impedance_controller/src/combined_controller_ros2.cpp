@@ -226,48 +226,90 @@ CombinedControllerROS2::CombinedControllerROS2()
     SET_INERTIA_GAIN_SERVICE,
     [this](const impedance_controller_interfaces::srv::SetGain::Request::SharedPtr request,
            impedance_controller_interfaces::srv::SetGain::Response::SharedPtr response) {
-      combined_controller_1_.setVirtualInertiaMatrix(request->gain);
-      combined_controller_2_.setVirtualInertiaMatrix(request->gain);
-      combined_controller_3_.setVirtualInertiaMatrix(request->gain);
-      combined_controller_4_.setVirtualInertiaMatrix(request->gain);
-      response->success = true;
-      response->message = "Inertia gain updated to " + std::to_string(request->gain);
+      try {
+        impedance_controller_params::validate_range(request->gain, 0.0, Eigen::NumTraits<double>::infinity(), "Inertia gain");
+        
+        combined_controller_1_.setVirtualInertiaMatrix(request->gain);
+        combined_controller_2_.setVirtualInertiaMatrix(request->gain);
+        combined_controller_3_.setVirtualInertiaMatrix(request->gain);
+        combined_controller_4_.setVirtualInertiaMatrix(request->gain);
+        
+        response->success = true;
+        response->message = "Inertia gain updated to " + std::to_string(request->gain);
+      } catch (const std::exception& e) {
+        response->success = false;
+        response->message = std::string("Ignored invalid inertia gain: ") + e.what() +
+          " Must be between 0 and +infty so the matrix is p.s.d.";
+        RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
+      }
     }
   );
   damping_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetGain>(
     SET_DAMPING_GAIN_SERVICE,
     [this](const impedance_controller_interfaces::srv::SetGain::Request::SharedPtr request,
            impedance_controller_interfaces::srv::SetGain::Response::SharedPtr response) {
-      combined_controller_1_.setVirtualDampingMatrix(request->gain);
-      combined_controller_2_.setVirtualDampingMatrix(request->gain);
-      combined_controller_3_.setVirtualDampingMatrix(request->gain);
-      combined_controller_4_.setVirtualDampingMatrix(request->gain);
-      response->success = true;
-      response->message = "Damping gain updated to " + std::to_string(request->gain);
+      try {
+        impedance_controller_params::validate_range(request->gain, 0.0, Eigen::NumTraits<double>::infinity(), "Damping gain");
+        
+        combined_controller_1_.setVirtualDampingMatrix(request->gain);
+        combined_controller_2_.setVirtualDampingMatrix(request->gain);
+        combined_controller_3_.setVirtualDampingMatrix(request->gain);
+        combined_controller_4_.setVirtualDampingMatrix(request->gain);
+        
+        response->success = true;
+        response->message = "Damping gain updated to " + std::to_string(request->gain);
+      } catch (const std::exception& e) {
+        response->success = false;
+        response->message = std::string("Ignored invalid damping gain: ") + e.what() +
+          " Must be between 0 and +infty so the matrix is p.s.d.";
+        RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
+      }
     }
   );
   stiffness_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetGain>(
     SET_STIFFNESS_GAIN_SERVICE,
     [this](const impedance_controller_interfaces::srv::SetGain::Request::SharedPtr request,
            impedance_controller_interfaces::srv::SetGain::Response::SharedPtr response) {
-      combined_controller_1_.setVirtualStiffnessMatrix(request->gain);
-      combined_controller_2_.setVirtualStiffnessMatrix(request->gain);
-      combined_controller_3_.setVirtualStiffnessMatrix(request->gain);
-      combined_controller_4_.setVirtualStiffnessMatrix(request->gain);
-      response->success = true;
-      response->message = "Stiffness gain updated to " + std::to_string(request->gain);
+      try {
+        impedance_controller_params::validate_range(request->gain, 0.0, Eigen::NumTraits<double>::infinity(), "Stiffness gain");
+        
+        combined_controller_1_.setVirtualStiffnessMatrix(request->gain);
+        combined_controller_2_.setVirtualStiffnessMatrix(request->gain);
+        combined_controller_3_.setVirtualStiffnessMatrix(request->gain);
+        combined_controller_4_.setVirtualStiffnessMatrix(request->gain);
+        
+        response->success = true;
+        response->message = "Stiffness gain updated to " + std::to_string(request->gain);
+      } catch (const std::exception& e) {
+        response->success = false;
+        response->message = std::string("Ignored invalid stiffness gain: ") + e.what() +
+          " Must be between 0 and +infty so the matrix is p.s.d.";
+        RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
+      }
     }
   );
   torque_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetGain>(
     SET_TORQUE_GAIN_SERVICE,
     [this](const impedance_controller_interfaces::srv::SetGain::Request::SharedPtr request,
            impedance_controller_interfaces::srv::SetGain::Response::SharedPtr response) {
-      combined_controller_1_.setForceFeedbackGain(request->gain);
-      combined_controller_2_.setForceFeedbackGain(request->gain);
-      combined_controller_3_.setForceFeedbackGain(request->gain);
-      combined_controller_4_.setForceFeedbackGain(request->gain);
-      response->success = true;
-      response->message = "Torque gain updated to " + std::to_string(request->gain);
+      try {
+        impedance_controller_params::validate_range(request->gain, 0.0,
+          impedance_controller_params::MAX_FORCE_FEEDBACK_GAIN, "Torque gain");
+        
+        combined_controller_1_.setForceFeedbackGain(request->gain);
+        combined_controller_2_.setForceFeedbackGain(request->gain);
+        combined_controller_3_.setForceFeedbackGain(request->gain);
+        combined_controller_4_.setForceFeedbackGain(request->gain);
+        
+        response->success = true;
+        response->message = "Torque gain updated to " + std::to_string(request->gain);
+      } catch (const std::exception& e) {
+        response->success = false;
+        response->message = std::string("Ignored invalid torque gain: ") + e.what() +
+          " Must be between 0 and " + std::to_string(impedance_controller_params::MAX_FORCE_FEEDBACK_GAIN) +
+          " to guarantee stability.";
+        RCLCPP_WARN(this->get_logger(), "%s", response->message.c_str());
+      }
     }
   );
 }

@@ -54,30 +54,29 @@ namespace impedance_controller_params {
         }
     }
 
-    void require_condition(const bool condition, const std::string& message) {
+    bool require_condition(const bool condition, const std::string& message) {
         if (!condition) throw std::runtime_error(message);
+        return true;
     }
 
-    void validate_vec(const Eigen::Vector2d& vec, const std::string& name) {
-        require_condition(vec.array().isFinite().all(),
-                          name + " must contain finite values.");
-        require_condition((vec.array() >= 0.0).all(), name + " elements must be >= 0.");
+    bool validate_vec(const Eigen::Vector2d& vec, const std::string& name) {
+        return require_condition(vec.array().isFinite().all(),
+                          name + " must contain finite values.") &&
+               require_condition((vec.array() >= 0.0).all(), name + " elements must be >= 0.");
     }
 
-    void validate_mat(const Eigen::Matrix2d& mat, const std::string& name) {
-        require_condition(mat.array().isFinite().all(), name + " must contain finite values.");
-
+    bool validate_mat(const Eigen::Matrix2d& mat, const std::string& name) {
         const double max_asymmetry = (mat - mat.transpose()).cwiseAbs().maxCoeff();
-        require_condition(max_asymmetry < 1e-10, name + " must be symmetric.");
-    
         Eigen::Vector2d eigenvalues = mat.selfadjointView<Eigen::Lower>().eigenvalues();
-        require_condition((eigenvalues.array() >= -1e-10).all(),
-                          name + " must be positive semi-definite (all eigenvalues >= 0).");
+        return require_condition(mat.array().isFinite().all(), name + " must contain finite values.") &&
+               require_condition(max_asymmetry < 1e-10, name + " must be symmetric.") &&
+               require_condition((eigenvalues.array() >= -1e-10).all(),
+                    name + " must be positive semi-definite (all eigenvalues >= 0).");
     }
 
     template <typename T>
-    void validate_range(const T value, const T min_value, const T max_value, const std::string& name) {
-        require_condition(value >= min_value && value <= max_value,
+    bool validate_range(const T value, const T min_value, const T max_value, const std::string& name) {
+        return require_condition(value >= min_value && value <= max_value,
                           name + " out of bounds. Expected in [" + std::to_string(min_value) + ", " + std::to_string(max_value) + "].");
     }
 }
