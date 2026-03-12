@@ -58,8 +58,10 @@ To configure the impedance controller, modify the initialization parameters in t
 To build the ROS2 workspace, go to the `ros2_ws` directory and run
 ``` bash
 source /opt/ros/humble/setup.bash
-colcon build
+colcon build --symlink-install
 ```
+The `--symlink-install` flag creates symbolic links to the source files instead of copying them during build. That means that changes to the source code will be reflected immediately without the need to rebuild the workspace. This is especially useful when adjusting the initialization parameters in the `config.toml` file.
+
 After that, source the ROS2 workspace with
 ``` bash
 source install/setup.bash
