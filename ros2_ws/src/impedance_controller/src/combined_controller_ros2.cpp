@@ -12,8 +12,8 @@
 #define SUBSCRIBE_MEASURED_POSITION_TOPIC "/senso_joint/position_rad"
 #define SUBSCRIBE_MEASURED_VELOCITY_TOPIC "/senso_joint/velocity_rad_per_sec"
 #define SUBSCRIBE_MEASURED_TORQUE_TOPIC "/senso_joint/torque_nm"
-#define SUBSCRIBE_DESIRED_POSITION_TOPIC "/planner/desired_joint_position_rad"          // TODO: Check name with Ian
-#define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/planner/desired_joint_velocity_rad_per_sec"  // TODO: Check name with Ian
+#define SUBSCRIBE_DESIRED_POSITION_TOPIC "/command/set_position_rad"
+#define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/command/set_velocity_rad_per_sec"
 
 #define ENABLE_COMBINED_CONTROL_SERVICE "/impedance_controller/combined_control_enabled"
 #define ENABLE_IMPEDANCE_TORQUE_SERVICE "/impedance_controller/impedance_control_enabled"
@@ -203,10 +203,10 @@ CombinedControllerROS2::CombinedControllerROS2()
     [this](const std_msgs::msg::Float32MultiArray::SharedPtr msg) {
       if (msg->data.size() >= 8) {
         // Parse message content
-        Eigen::Vector2d desired_joint_velocity_1(msg->data[0], msg->data[1]); // TODO: Check units with Ian
-        Eigen::Vector2d desired_joint_velocity_2(msg->data[2], msg->data[3]); // TODO: Check units with Ian
-        Eigen::Vector2d desired_joint_velocity_3(msg->data[4], msg->data[5]); // TODO: Check units with Ian
-        Eigen::Vector2d desired_joint_velocity_4(msg->data[6], msg->data[7]); // TODO: Check units with Ian
+        Eigen::Vector2d desired_joint_velocity_1(msg->data[0], msg->data[1]);
+        Eigen::Vector2d desired_joint_velocity_2(msg->data[2], msg->data[3]);
+        Eigen::Vector2d desired_joint_velocity_3(msg->data[4], msg->data[5]);
+        Eigen::Vector2d desired_joint_velocity_4(msg->data[6], msg->data[7]);
         // Perform coordinate transform
         desired_joint_velocity_1 = coordinate_transform::incoming_velocities_to_DH_velocities(desired_joint_velocity_1);
         desired_joint_velocity_2 = coordinate_transform::incoming_velocities_to_DH_velocities(desired_joint_velocity_2);
