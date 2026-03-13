@@ -76,8 +76,9 @@ To configure the impedance controller, modify the initialization parameters in t
 > The setters for the matrices take a scalar value and set the corresponding matrix to a scaled identity matrix. This is a common approach for tuning the controller with a single gain parameter. However, the software can be easily extended to allow setting full matrices, if needed.
 
 ### Build & Run
-To build the ROS2 workspace, go to the `ros2_ws` directory and run
+To build the ROS2 workspace, run
 ``` bash
+cd ros2_ws
 source /opt/ros/humble/setup.bash
 colcon build --symlink-install
 ```
