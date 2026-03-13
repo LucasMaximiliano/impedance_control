@@ -78,7 +78,7 @@ Eigen::Vector2d ImpedanceControllerBase::computeImpedanceTorque()
   }
   if (joint_torque_commanded.cwiseAbs().maxCoeff() > max_actuator_torque_) {
     std::cerr <<
-      "[ImpedanceControllerBase] Warning: Computed joint torque exceeds maximum actuator torque. Clamping value to"
+      "[ImpedanceControllerBase] Warning: Computed joint torque exceeds maximum actuator torque. Clamping value to "
               << max_actuator_torque_ << " Nm." << std::endl;
     joint_torque_commanded = joint_torque_commanded.cwiseMin(max_actuator_torque_).cwiseMax(
       -max_actuator_torque_);
