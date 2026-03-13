@@ -1,14 +1,11 @@
 """Integration tests for (de-)spawing of impedance_controller ROS 2 node."""
 
-import os
-import time
 import unittest
 
 import launch
 import launch_ros
 import launch_testing
 import rclpy
-import std_msgs.msg
 
 
 def generate_test_description():
