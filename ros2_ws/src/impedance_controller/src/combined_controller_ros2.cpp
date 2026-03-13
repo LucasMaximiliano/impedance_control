@@ -12,8 +12,8 @@
 #define SUBSCRIBE_MEASURED_POSITION_TOPIC "/senso_joint/position_rad"
 #define SUBSCRIBE_MEASURED_VELOCITY_TOPIC "/senso_joint/velocity_rad_per_sec"
 #define SUBSCRIBE_MEASURED_TORQUE_TOPIC "/senso_joint/torque_nm"
-#define SUBSCRIBE_DESIRED_POSITION_TOPIC "/command/set_position_rad"
-#define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/command/set_velocity_rad_per_sec"
+#define SUBSCRIBE_DESIRED_POSITION_TOPIC "/impedance_controller/set_position_rad"
+#define SUBSCRIBE_DESIRED_VELOCITY_TOPIC "/impedance_controller/set_velocity_rad_per_sec"
 
 #define ENABLE_COMBINED_CONTROL_SERVICE "/impedance_controller/combined_control_enabled"
 #define ENABLE_IMPEDANCE_TORQUE_SERVICE "/impedance_controller/impedance_control_enabled"
