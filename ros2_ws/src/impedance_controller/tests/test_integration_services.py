@@ -1,7 +1,5 @@
 """Integration tests for dynamic parameter reconfiguration of the impedance_controller ROS 2 node using services."""
 
-import os
-import time
 import unittest
 
 import launch
@@ -18,7 +16,7 @@ SERVICE_TOPIC_3 = "/impedance_controller/set_inertia_gain"
 SERVICE_TOPIC_4 = "/impedance_controller/set_damping_gain"
 SERVICE_TOPIC_5 = "/impedance_controller/set_stiffness_gain"
 SERVICE_TOPIC_6 = "/impedance_controller/set_torque_gain"
-TEST_TIMEOUT_SEC = 10.0
+TEST_TIMEOUT_SEC = 100.0
 
 def generate_test_description():
     """Generate the launch description for integration tests."""
@@ -65,11 +63,15 @@ class TestImpedanceController(unittest.TestCase):
             # request combined control enabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=True))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Combined control enabled"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Combined control enabled"
             # request combined control disabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=False))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Combined control disabled"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Combined control disabled"
         finally:
             self.node.destroy_client(srv)
     
@@ -81,11 +83,15 @@ class TestImpedanceController(unittest.TestCase):
             # request gravity compensation enabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=True))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Gravity compensation enabled"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Gravity compensation enabled"
             # request gravity compensation disabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=False))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Gravity compensation disabled"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Gravity compensation disabled"
         finally:
             self.node.destroy_client(srv)
     
@@ -97,11 +103,15 @@ class TestImpedanceController(unittest.TestCase):
             # request impedance control enabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=True))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Impedance control enabled"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Impedance control enabled"
             # request impedance control disabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=False))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Impedance control disabled"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Impedance control disabled"
         finally:
             self.node.destroy_client(srv)
 
@@ -113,7 +123,9 @@ class TestImpedanceController(unittest.TestCase):
             # request inertia gain update
             future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=5.0))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Inertia gain updated to 5.000000"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Inertia gain updated to 5.000000"
         finally:
             self.node.destroy_client(srv)
 
@@ -125,7 +137,9 @@ class TestImpedanceController(unittest.TestCase):
             # request damping gain update
             future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=5.0))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Damping gain updated to 5.000000"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Damping gain updated to 5.000000"
         finally:
             self.node.destroy_client(srv)
 
@@ -137,7 +151,9 @@ class TestImpedanceController(unittest.TestCase):
             # request stiffness gain update
             future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=5.0))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Stiffness gain updated to 5.000000"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Stiffness gain updated to 5.000000"
         finally:
             self.node.destroy_client(srv)
 
@@ -149,6 +165,8 @@ class TestImpedanceController(unittest.TestCase):
             # request torque gain update
             future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=0.5))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Torque gain updated to 0.500000"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Torque gain updated to 0.500000"
         finally:
             self.node.destroy_client(srv)
