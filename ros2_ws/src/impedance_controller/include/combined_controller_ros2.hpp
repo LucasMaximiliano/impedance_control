@@ -49,8 +49,8 @@ private:
   rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr measured_position_subscription_;
   rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr measured_velocity_subscription_;
   rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr measured_torque_subscription_;
-  rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr desired_position_subscription_;   // TODO: Check type with Ian
-  rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr desired_velocity_subscription_;   // TODO: Check type with Ian
+  rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr desired_position_subscription_;
+  rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr desired_velocity_subscription_;
   //! \}
   //! \name Services
   //! \brief ROS2 services for dynamically reconfiguring the controller at runtime.
