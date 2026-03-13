@@ -101,7 +101,11 @@ To run the integration tests for the impedance controller, use the following com
 ``` bash
 colcon test --packages-select impedance_controller
 ```
-This will execute all the tests defined for the `impedance_controller` package. You can view the test results in the terminal or generate a report for more detailed information. To generate a test report, run:
+This will execute all the tests defined for the `impedance_controller` package. It is also possible to run the tests for a given package individually. Below is an example command to run only the `test_integration_spawn.py` test script:
+``` bash
+colcon test --packages-select impedance_controller --ctest-args -R test_integration_spawn
+```
+You can view the test results in the terminal with:
 ``` bash
 colcon test-result --all --verbose
 ```
