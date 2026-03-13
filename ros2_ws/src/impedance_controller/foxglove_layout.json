@@ -1,40 +1,46 @@
 {
   "configById": {
-    "CallService!49yogva": {
-      "requestPayload": "{ \"data\": true }",
+    "CallService!3u0xy6t": {
+      "requestPayload": "{ \"data\": false }",
       "layout": "vertical",
       "timeoutSeconds": 10,
-      "serviceName": "/impedance_control_enabled"
+      "serviceName": "/impedance_controller/combined_control_enabled"
     },
-    "CallService!2gksp5q": {
-      "requestPayload": "{ \"gain\": 0.0 }",
+    "CallService!49yogva": {
+      "requestPayload": "{\n  \"data\": false\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
-      "serviceName": "/set_inertia_gain"
+      "serviceName": "/impedance_controller/impedance_control_enabled"
     },
     "CallService!qg9zqu": {
-      "requestPayload": "{ \"data\": true }",
+      "requestPayload": "{\n  \"data\": false\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
-      "serviceName": "/gravity_compensation_enabled"
+      "serviceName": "/impedance_controller/gravity_compensation_enabled"
     },
-    "CallService!nql7xj": {
-      "requestPayload": "{ \"gain\": 0.0 }",
+    "CallService!2gksp5q": {
+      "requestPayload": "{\n  \"gain\": 0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
-      "serviceName": "/set_torque_gain"
+      "serviceName": "/impedance_controller/set_inertia_gain"
     },
     "CallService!1knn54d": {
-      "requestPayload": "{ \"gain\": 0.0 }",
+      "requestPayload": "{\n  \"gain\": 0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
-      "serviceName": "/set_damping_gain"
+      "serviceName": "/impedance_controller/set_damping_gain"
     },
     "CallService!4g86mc0": {
-      "requestPayload": "{ \"gain\": 0.0 }",
+      "requestPayload": "{\n  \"gain\": 0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
-      "serviceName": "/set_stiffness_gain"
+      "serviceName": "/impedance_controller/set_stiffness_gain"
+    },
+    "CallService!nql7xj": {
+      "requestPayload": "{\n  \"gain\": 0\n}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/impedance_controller/set_torque_gain"
     }
   },
   "globalVariables": {},
@@ -43,25 +49,30 @@
     "speed": 1
   },
   "layout": {
-    "direction": "row",
     "first": {
-      "first": "CallService!49yogva",
-      "second": "CallService!2gksp5q",
-      "direction": "column"
+      "first": {
+        "first": "CallService!3u0xy6t",
+        "second": "CallService!49yogva",
+        "direction": "row"
+      },
+      "second": "CallService!qg9zqu",
+      "direction": "row",
+      "splitPercentage": 65.80698835274542
     },
     "second": {
       "first": {
-        "first": "CallService!qg9zqu",
-        "second": "CallService!nql7xj",
+        "first": "CallService!2gksp5q",
+        "second": "CallService!1knn54d",
         "direction": "row"
       },
       "second": {
-        "first": "CallService!1knn54d",
-        "second": "CallService!4g86mc0",
+        "first": "CallService!4g86mc0",
+        "second": "CallService!nql7xj",
         "direction": "row"
       },
-      "direction": "column"
+      "direction": "row",
+      "splitPercentage": 50.08319467554077
     },
-    "splitPercentage": 33.30995792426367
+    "direction": "column"
   }
 }
