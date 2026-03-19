@@ -147,6 +147,9 @@ make
 ```
 The resulting `refman.pdf` file contains the complete documentation.
 
+> [!NOTE]
+> To keep the docker container lightweight, LaTeX is not installed. If you want to generate the `.pdf` documentation, you can do it on your local machine with a LaTeX installation (e.g. TeX Live, MiKTeX, etc.) by following the instructions above.
+
 ### Developer Notes
 For more information on the impedance control algorithm, refer to the [developer notes](https://sharelatex.tum.de/project/694488e4bccf9df893153f9d). The latest version is also available in the `docs/` directory.
 

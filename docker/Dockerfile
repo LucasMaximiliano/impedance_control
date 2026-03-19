@@ -14,9 +14,6 @@ RUN apt-get update && \
       cmake \
       git \
       doxygen \
-      texlive-latex-base \
-      texlive-latex-extra \
-      texlive-fonts-recommended \
       python3-colcon-common-extensions \
       python3-pip \
       pkg-config \
