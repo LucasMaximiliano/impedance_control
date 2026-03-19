@@ -5,7 +5,7 @@ FROM osrf/ros:$ROS_DISTRO-desktop-full
 # Disable interactive prompts during package installation
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies
+# Install apt-get dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       libeigen3-dev \
@@ -20,6 +20,9 @@ RUN apt-get update && \
       wget \
       ros-$ROS_DISTRO-foxglove-bridge && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install python dependencies
+RUN pip3 install roboticstoolbox-python
 
 # Re-enable interactive prompts
 ENV DEBIAN_FRONTEND=dialog
