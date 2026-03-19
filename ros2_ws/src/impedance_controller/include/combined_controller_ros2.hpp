@@ -2,7 +2,7 @@
 #define COMBINED_CONTROLLER_ROS2_HPP
 
 #include "combined_controller_base.hpp"
-#include "impedance_controller_interfaces/srv/set_gain.hpp"
+#include "impedance_controller_interfaces/srv/set_float64.hpp"
 #include "std_msgs/msg/float32_multi_array.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include "std_srvs/srv/set_bool.hpp"
@@ -58,10 +58,10 @@ private:
   rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr combined_control_enabled_service_;
   rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr impedance_control_enabled_service_;
   rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr gravity_compensation_enabled_service_;
-  rclcpp::Service<impedance_controller_interfaces::srv::SetGain>::SharedPtr inertia_gain_service_;
-  rclcpp::Service<impedance_controller_interfaces::srv::SetGain>::SharedPtr damping_gain_service_;
-  rclcpp::Service<impedance_controller_interfaces::srv::SetGain>::SharedPtr stiffness_gain_service_;
-  rclcpp::Service<impedance_controller_interfaces::srv::SetGain>::SharedPtr torque_gain_service_;
+  rclcpp::Service<impedance_controller_interfaces::srv::SetFloat64>::SharedPtr inertia_gain_service_;
+  rclcpp::Service<impedance_controller_interfaces::srv::SetFloat64>::SharedPtr damping_gain_service_;
+  rclcpp::Service<impedance_controller_interfaces::srv::SetFloat64>::SharedPtr stiffness_gain_service_;
+  rclcpp::Service<impedance_controller_interfaces::srv::SetFloat64>::SharedPtr torque_gain_service_;
   //! \}
 
   //! \name Combined Controller Instances

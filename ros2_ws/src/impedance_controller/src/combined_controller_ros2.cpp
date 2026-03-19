@@ -272,20 +272,20 @@ CombinedControllerROS2::CombinedControllerROS2()
       response->message = request->data ? "Gravity compensation enabled" : "Gravity compensation disabled";
     }
   );
-  inertia_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetGain>(
+  inertia_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetFloat64>(
     SET_INERTIA_GAIN_SERVICE,
-    [this](const impedance_controller_interfaces::srv::SetGain::Request::SharedPtr request,
-           impedance_controller_interfaces::srv::SetGain::Response::SharedPtr response) {
+    [this](const impedance_controller_interfaces::srv::SetFloat64::Request::SharedPtr request,
+           impedance_controller_interfaces::srv::SetFloat64::Response::SharedPtr response) {
       try {
-        impedance_controller_params::validate_range(request->gain, 0.0, Eigen::NumTraits<double>::infinity(), "Inertia gain");
+        impedance_controller_params::validate_range(request->data, 0.0, Eigen::NumTraits<double>::infinity(), "Inertia gain");
         
-        combined_controller_1_.setVirtualInertiaMatrix(request->gain);
-        combined_controller_2_.setVirtualInertiaMatrix(request->gain);
-        combined_controller_3_.setVirtualInertiaMatrix(request->gain);
-        combined_controller_4_.setVirtualInertiaMatrix(request->gain);
+        combined_controller_1_.setVirtualInertiaMatrix(request->data);
+        combined_controller_2_.setVirtualInertiaMatrix(request->data);
+        combined_controller_3_.setVirtualInertiaMatrix(request->data);
+        combined_controller_4_.setVirtualInertiaMatrix(request->data);
         
         response->success = true;
-        response->message = "Inertia gain updated to " + std::to_string(request->gain);
+        response->message = "Inertia gain updated to " + std::to_string(request->data);
       } catch (const std::exception& e) {
         response->success = false;
         response->message = std::string("Ignored invalid inertia gain: ") + e.what() +
@@ -294,20 +294,20 @@ CombinedControllerROS2::CombinedControllerROS2()
       }
     }
   );
-  damping_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetGain>(
+  damping_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetFloat64>(
     SET_DAMPING_GAIN_SERVICE,
-    [this](const impedance_controller_interfaces::srv::SetGain::Request::SharedPtr request,
-           impedance_controller_interfaces::srv::SetGain::Response::SharedPtr response) {
+    [this](const impedance_controller_interfaces::srv::SetFloat64::Request::SharedPtr request,
+           impedance_controller_interfaces::srv::SetFloat64::Response::SharedPtr response) {
       try {
-        impedance_controller_params::validate_range(request->gain, 0.0, Eigen::NumTraits<double>::infinity(), "Damping gain");
+        impedance_controller_params::validate_range(request->data, 0.0, Eigen::NumTraits<double>::infinity(), "Damping gain");
         
-        combined_controller_1_.setVirtualDampingMatrix(request->gain);
-        combined_controller_2_.setVirtualDampingMatrix(request->gain);
-        combined_controller_3_.setVirtualDampingMatrix(request->gain);
-        combined_controller_4_.setVirtualDampingMatrix(request->gain);
+        combined_controller_1_.setVirtualDampingMatrix(request->data);
+        combined_controller_2_.setVirtualDampingMatrix(request->data);
+        combined_controller_3_.setVirtualDampingMatrix(request->data);
+        combined_controller_4_.setVirtualDampingMatrix(request->data);
         
         response->success = true;
-        response->message = "Damping gain updated to " + std::to_string(request->gain);
+        response->message = "Damping gain updated to " + std::to_string(request->data);
       } catch (const std::exception& e) {
         response->success = false;
         response->message = std::string("Ignored invalid damping gain: ") + e.what() +
@@ -316,20 +316,20 @@ CombinedControllerROS2::CombinedControllerROS2()
       }
     }
   );
-  stiffness_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetGain>(
+  stiffness_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetFloat64>(
     SET_STIFFNESS_GAIN_SERVICE,
-    [this](const impedance_controller_interfaces::srv::SetGain::Request::SharedPtr request,
-           impedance_controller_interfaces::srv::SetGain::Response::SharedPtr response) {
+    [this](const impedance_controller_interfaces::srv::SetFloat64::Request::SharedPtr request,
+           impedance_controller_interfaces::srv::SetFloat64::Response::SharedPtr response) {
       try {
-        impedance_controller_params::validate_range(request->gain, 0.0, Eigen::NumTraits<double>::infinity(), "Stiffness gain");
+        impedance_controller_params::validate_range(request->data, 0.0, Eigen::NumTraits<double>::infinity(), "Stiffness gain");
         
-        combined_controller_1_.setVirtualStiffnessMatrix(request->gain);
-        combined_controller_2_.setVirtualStiffnessMatrix(request->gain);
-        combined_controller_3_.setVirtualStiffnessMatrix(request->gain);
-        combined_controller_4_.setVirtualStiffnessMatrix(request->gain);
+        combined_controller_1_.setVirtualStiffnessMatrix(request->data);
+        combined_controller_2_.setVirtualStiffnessMatrix(request->data);
+        combined_controller_3_.setVirtualStiffnessMatrix(request->data);
+        combined_controller_4_.setVirtualStiffnessMatrix(request->data);
         
         response->success = true;
-        response->message = "Stiffness gain updated to " + std::to_string(request->gain);
+        response->message = "Stiffness gain updated to " + std::to_string(request->data);
       } catch (const std::exception& e) {
         response->success = false;
         response->message = std::string("Ignored invalid stiffness gain: ") + e.what() +
@@ -338,21 +338,21 @@ CombinedControllerROS2::CombinedControllerROS2()
       }
     }
   );
-  torque_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetGain>(
+  torque_gain_service_ = this->create_service<impedance_controller_interfaces::srv::SetFloat64>(
     SET_TORQUE_GAIN_SERVICE,
-    [this](const impedance_controller_interfaces::srv::SetGain::Request::SharedPtr request,
-           impedance_controller_interfaces::srv::SetGain::Response::SharedPtr response) {
+    [this](const impedance_controller_interfaces::srv::SetFloat64::Request::SharedPtr request,
+           impedance_controller_interfaces::srv::SetFloat64::Response::SharedPtr response) {
       try {
-        impedance_controller_params::validate_range(request->gain, 0.0,
+        impedance_controller_params::validate_range(request->data, 0.0,
           impedance_controller_params::MAX_FORCE_FEEDBACK_GAIN, "Torque gain");
         
-        combined_controller_1_.setForceFeedbackGain(request->gain);
-        combined_controller_2_.setForceFeedbackGain(request->gain);
-        combined_controller_3_.setForceFeedbackGain(request->gain);
-        combined_controller_4_.setForceFeedbackGain(request->gain);
+        combined_controller_1_.setForceFeedbackGain(request->data);
+        combined_controller_2_.setForceFeedbackGain(request->data);
+        combined_controller_3_.setForceFeedbackGain(request->data);
+        combined_controller_4_.setForceFeedbackGain(request->data);
         
         response->success = true;
-        response->message = "Torque gain updated to " + std::to_string(request->gain);
+        response->message = "Torque gain updated to " + std::to_string(request->data);
       } catch (const std::exception& e) {
         response->success = false;
         response->message = std::string("Ignored invalid torque gain: ") + e.what() +

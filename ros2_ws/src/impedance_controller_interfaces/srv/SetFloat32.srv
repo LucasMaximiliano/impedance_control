@@ -1,5 +1,5 @@
-# SetGain.srv
-float64 gain
+# SetFloat32.srv
+float32 data
 ---
 bool success
 string message
