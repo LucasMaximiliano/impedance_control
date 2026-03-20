@@ -1,22 +1,10 @@
 {
   "configById": {
     "CallService!3u0xy6t": {
-      "requestPayload": "{ \"data\": false }",
+      "requestPayload": "{\n  \"data\": true\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/combined_control_enabled"
-    },
-    "CallService!49yogva": {
-      "requestPayload": "{\n  \"data\": false\n}",
-      "layout": "vertical",
-      "timeoutSeconds": 10,
-      "serviceName": "/impedance_controller/impedance_control_enabled"
-    },
-    "CallService!qg9zqu": {
-      "requestPayload": "{\n  \"data\": false\n}",
-      "layout": "vertical",
-      "timeoutSeconds": 10,
-      "serviceName": "/impedance_controller/gravity_compensation_enabled"
     },
     "CallService!2gksp5q": {
       "requestPayload": "{\n  \"gain\": 0\n}",
@@ -30,17 +18,130 @@
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_damping_gain"
     },
+    "CallService!49yogva": {
+      "requestPayload": "{\n  \"data\": true\n}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/impedance_controller/impedance_control_enabled"
+    },
     "CallService!4g86mc0": {
       "requestPayload": "{\n  \"gain\": 0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_stiffness_gain"
     },
+    "CallService!qg9zqu": {
+      "requestPayload": "{\n  \"data\": false\n}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/impedance_controller/gravity_compensation_enabled"
+    },
     "CallService!nql7xj": {
       "requestPayload": "{\n  \"gain\": 0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_torque_gain"
+    },
+    "CallService!2lls7tw": {
+      "requestPayload": "{\n  \"data\": true\n}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/impedance_controller/set_planner_enabled"
+    },
+    "CallService!1kbdqs2": {
+      "requestPayload": "{\n  \"data\": [0.0, 0.0]\n}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/impedance_controller/set_final_position_rad"
+    },
+    "Plot!o3xnqx": {
+      "xAxisVal": "timestamp",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/impedance_controller/set_position_rad.data[:]",
+          "enabled": true,
+          "color": "#4e98e2",
+          "id": "b0e0f809-d990-4d52-bccf-90b4cba7a0f2"
+        }
+      ]
+    },
+    "Plot!2h83teb": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/impedance_controller/set_velocity_rad_per_sec.data[:]",
+          "enabled": true,
+          "color": "#4e98e2",
+          "id": "62127255-cd1d-4946-be6a-3a2d86e94fb7"
+        }
+      ]
+    },
+    "Plot!1sx21b4": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/command/set_torque_nm.data[:]",
+          "enabled": true,
+          "color": "#4e98e2",
+          "id": "6d8ee68c-700d-479f-8e43-34dd4662e176"
+        }
+      ]
+    },
+    "Tab!1f1y1hu": {
+      "tabs": [
+        {
+          "title": "Controller",
+          "layout": {
+            "first": {
+              "first": "CallService!3u0xy6t",
+              "second": {
+                "first": "CallService!2gksp5q",
+                "second": "CallService!1knn54d",
+                "direction": "row"
+              },
+              "direction": "column"
+            },
+            "second": {
+              "first": {
+                "first": "CallService!49yogva",
+                "second": "CallService!4g86mc0",
+                "direction": "column"
+              },
+              "second": {
+                "first": "CallService!qg9zqu",
+                "second": "CallService!nql7xj",
+                "direction": "column"
+              },
+              "direction": "row"
+            },
+            "direction": "row",
+            "splitPercentage": 50.08319467554077
+          }
+        },
+        {
+          "title": "Planner",
+          "layout": {
+            "first": {
+              "first": "CallService!2lls7tw",
+              "second": "CallService!1kbdqs2",
+              "direction": "column"
+            },
+            "second": {
+              "first": "Plot!o3xnqx",
+              "second": {
+                "first": "Plot!2h83teb",
+                "second": "Plot!1sx21b4",
+                "direction": "column"
+              },
+              "direction": "column",
+              "splitPercentage": 32.01554152501214
+            },
+            "direction": "row"
+          }
+        }
+      ],
+      "activeTabIdx": 1
     }
   },
   "globalVariables": {},
@@ -48,31 +149,5 @@
   "playbackConfig": {
     "speed": 1
   },
-  "layout": {
-    "first": {
-      "first": {
-        "first": "CallService!3u0xy6t",
-        "second": "CallService!49yogva",
-        "direction": "row"
-      },
-      "second": "CallService!qg9zqu",
-      "direction": "row",
-      "splitPercentage": 65.80698835274542
-    },
-    "second": {
-      "first": {
-        "first": "CallService!2gksp5q",
-        "second": "CallService!1knn54d",
-        "direction": "row"
-      },
-      "second": {
-        "first": "CallService!4g86mc0",
-        "second": "CallService!nql7xj",
-        "direction": "row"
-      },
-      "direction": "row",
-      "splitPercentage": 50.08319467554077
-    },
-    "direction": "column"
-  }
+  "layout": "Tab!1f1y1hu"
 }
