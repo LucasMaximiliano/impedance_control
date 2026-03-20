@@ -16,13 +16,17 @@ RUN apt-get update && \
       doxygen \
       python3-colcon-common-extensions \
       python3-pip \
+      python3-dev \
       pkg-config \
       wget \
       ros-$ROS_DISTRO-foxglove-bridge && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
-RUN pip3 install roboticstoolbox-python
+RUN pip3 install --no-cache-dir --upgrade pip && \ 
+  pip3 install --no-cache-dir "numpy==1.24.4" \
+    "scipy==1.10.1" \
+    "roboticstoolbox-python==1.1.1"
 
 # Re-enable interactive prompts
 ENV DEBIAN_FRONTEND=dialog
