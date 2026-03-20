@@ -28,23 +28,23 @@ MAX_JOINT_VELOCITY_RAD_PER_SEC = 2.0
 MAX_JOINT_ACCELERATION_RAD_PER_SEC_SQ = 0.4
 QUEUE_SIZE = 10
 SUBSCRIBE_MEASURED_INITIAL_POSITION_TOPIC = {
-    "name": 'senso_joint/position_rad',
+    "name": '/senso_joint/position_rad',
     "msg_type": Float64MultiArray
 }
 SET_DESIRED_FINAL_POSITION_SERVICE    = {
-    "name": 'impedance_controller/set_final_position_rad',
+    "name": '/impedance_controller/set_final_position_rad',
     "msg_type": SetFloat64
 }
 SET_PLANNER_ENABLED_SERVICE = {
-    "name": 'impedance_controller/set_planner_enabled',
+    "name": '/impedance_controller/set_planner_enabled',
     "msg_type": SetBool
 }
 PUBLISH_DESIRED_POSITION_TOPIC = {
-    "name": 'impedance_controller/set_position_rad',
+    "name": '/impedance_controller/set_position_rad',
     "msg_type": Float64MultiArray
 }
 PUBLISH_DESIRED_VELOCITY_TOPIC = {
-    "name": 'impedance_controller/set_velocity_rad_per_sec',
+    "name": '/impedance_controller/set_velocity_rad_per_sec',
     "msg_type": Float32MultiArray
 }
 
@@ -179,8 +179,8 @@ class DummyPlannerNode(Node):
                 ' rad. Calculating trajectory from measured initial position: ' + str(self.measured_initial_position_) +
                 ' rad.')
             # Generate trajectory with trapezoidal velocity profile (sampled at the control loop frequency)
-            trajectory_duration_sec = (MAX_JOINT_ACCELERATION_RAD_PER_SEC_SQ + MAX_JOINT_VELOCITY_RAD_PER_SEC**2) /
-                (MAX_JOINT_ACCELERATION_RAD_PER_SEC_SQ * MAX_JOINT_VELOCITY_RAD_PER_SEC)
+            trajectory_duration_sec = ( (MAX_JOINT_ACCELERATION_RAD_PER_SEC_SQ + MAX_JOINT_VELOCITY_RAD_PER_SEC**2) /
+                (MAX_JOINT_ACCELERATION_RAD_PER_SEC_SQ * MAX_JOINT_VELOCITY_RAD_PER_SEC) )
             time_array = np.arange(0, trajectory_duration_sec, CONTROL_LOOP_DURATION_MS / 1000.0)
             self.trajectory_ = mtraj(trapezoidal, self.measured_initial_position_, self.desired_final_position_, time_array)
             self.trajectory_ready_ = True
