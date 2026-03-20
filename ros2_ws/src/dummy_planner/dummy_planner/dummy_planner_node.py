@@ -7,6 +7,9 @@ The dummy planner generates a trajectory with a trapezoidal velocity profile fro
 measured current configuration of the finger to the desired final configuration. The trajectory
 is sampled at the control loop frequency and published as position and velocity references to
 the impedance controller, as long as the planner is enabled.
+
+IMPORTANT: Make sure that the constants defined below are consistent with the parameters defined
+in the impedance controller, otherwise the trajectory generation will not work as expected!
 """
 
 import rclpy
@@ -19,41 +22,27 @@ from std_msgs.msg import Float64MultiArray
 from std_srvs.srv import SetBool
 from impedance_controller_interfaces.srv import SetFloat64
 
-# Constants:
-#   - Control loop duration
-#   - Maximum joint velocity
-#   - Maximum joint acceleration
-#   - Queue size for ROS2 publishers and subscribers
-#   - Topic names and message types for ROS2 publishers and subscribers
-
+# Constants (please verify these values before testing)
 CONTROL_LOOP_DURATION_MS = 10
-
 MAX_JOINT_VELOCITY_RAD_PER_SEC = 2.0
-
 MAX_JOINT_ACCELERATION_RAD_PER_SEC_SQ = 0.4
-
 QUEUE_SIZE = 10
-
 SUBSCRIBE_MEASURED_INITIAL_POSITION_TOPIC = {
     "name": 'senso_joint/position_rad',
     "msg_type": Float64MultiArray
 }
-
-SERVE_DESIRED_FINAL_POSITION_SERVICE    = {
+SET_DESIRED_FINAL_POSITION_SERVICE    = {
     "name": 'impedance_controller/set_final_position_rad',
     "msg_type": SetFloat64
 }
-
-SERVE_PLANNER_ENABLED_SERVICE = {
+SET_PLANNER_ENABLED_SERVICE = {
     "name": 'impedance_controller/set_planner_enabled',
     "msg_type": SetBool
 }
-
 PUBLISH_DESIRED_POSITION_TOPIC = {
     "name": 'impedance_controller/set_position_rad',
     "msg_type": Float64MultiArray
 }
-
 PUBLISH_DESIRED_VELOCITY_TOPIC = {
     "name": 'impedance_controller/set_velocity_rad_per_sec',
     "msg_type": Float32MultiArray
@@ -128,13 +117,13 @@ class DummyPlannerNode(Node):
         )
         # Services
         self.desired_final_position_service_ = self.create_service(
-            SERVE_DESIRED_FINAL_POSITION_TOPIC["msg_type"],
-            SERVE_DESIRED_FINAL_POSITION_TOPIC["name"],
+            SET_DESIRED_FINAL_POSITION_TOPIC["msg_type"],
+            SET_DESIRED_FINAL_POSITION_TOPIC["name"],
             self.desired_final_position_callback
         )
         self.planner_enabled_service_ = self.create_service(
-            SERVE_PLANNER_ENABLED_SERVICE["msg_type"],
-            SERVE_PLANNER_ENABLED_SERVICE["name"],
+            SET_PLANNER_ENABLED_SERVICE["msg_type"],
+            SET_PLANNER_ENABLED_SERVICE["name"],
             self.planner_enabled_callback
         )
         # Publishers
@@ -207,25 +196,59 @@ class DummyPlannerNode(Node):
         return response
 
     def planner_enabled_callback(self, request, response):
+        """Callback function for enabling or disabling the planner.
+
+        Turns the received boolean into a flag for enabling or disabling the
+        planner and stores it in the class variable `planner_enabled_`.
+
+        Parameters
+        ----------
+        request : std_srvs.srv.SetBool.Request
+            the request containing the boolean for enabling or disabling the
+            planner.
+        response : std_srvs.srv.SetBool.Response
+            the response to be sent back after processing the request.
+
+        Returns
+        -------
+        std_srvs.srv.SetBool.Response
+            the response containing a success flag and a message indicating the
+            result of the operation.
+        """
         if request.data:
-            self.get_logger().info('Planner enabled.')
+            response.message = 'Planner enabled.'
             self.planner_enabled_ = True
         else:
-            self.get_logger().info('Planner disabled.')
+            response.message = 'Planner disabled.'
             self.planner_enabled_ = False
+        self.get_logger().info(response.message)
         response.success = True
         return response
 
     def timer_callback(self):
+        """Callback function for publishing the desired position and velocity
+        references.
+
+        If the planner is enabled and the trajectory has already been calculated,
+        it formats the current position and velocity references from the trajectory
+        into ROS2 messages and publishes them to the impedance controller at the
+        control loop frequency. It also iterates through the trajectory by increasing
+        the index for the next references. If the end of the trajectory is reached,
+        it logs that the trajectory execution is completed, disables the planner,
+        resets the trajectory ready flag, and resets the trajectory index for the next
+        execution.
+        """
         if self.planner_enabled_ and self.trajectory_ready_:
-            # Format and publish position and velocity references
             desired_position_msg = Float64MultiArray()
             desired_velocity_msg = Float32MultiArray()
-            desired_position_msg.data = self.trajectory_[0][self.trajectory_index_].tolist()
-            desired_velocity_msg.data = self.trajectory_[1][self.trajectory_index_].tolist()
+            # Format ROS messages
+            desired_position_msg.data = self.trajectory_.q[self.trajectory_index_, :]
+            desired_velocity_msg.data = self.trajectory_.qd[self.trajectory_index_, :]
+            # Publish ROS messages and increment trajectory index for next run
             self.desired_position_publisher_.publish(desired_position_msg)
             self.desired_velocity_publisher_.publish(desired_velocity_msg)
             self.trajectory_index_ += 1
+            # Check if end of trajectory is reached and reset variables if so
             if self.trajectory_index_ >= self.trajectory_.__len__():
                 self.get_logger().info('Trajectory execution completed.')
                 self.planner_enabled_ = False
