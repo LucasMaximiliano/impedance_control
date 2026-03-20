@@ -9,7 +9,6 @@
 
   <exec_depend>rclpy</exec_depend>
   <exec_depend>roboticstoolbox</exec_depend>
-  <exec_depend>scipy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>std_srvs</exec_depend>
   <exec_depend>impedance_controller_interfaces</exec_depend>

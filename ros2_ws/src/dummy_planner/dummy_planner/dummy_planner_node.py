@@ -20,7 +20,7 @@ from rclpy.node import Node
 from std_msgs.msg import Float32MultiArray
 from std_msgs.msg import Float64MultiArray
 from std_srvs.srv import SetBool
-from impedance_controller_interfaces.srv import SetFloat64
+from impedance_controller_interfaces.srv import SetFloat64MultiArray
 
 # Constants (please verify these values before testing)
 CONTROL_LOOP_DURATION_MS = 10
@@ -33,7 +33,7 @@ SUBSCRIBE_MEASURED_INITIAL_POSITION_TOPIC = {
 }
 SET_DESIRED_FINAL_POSITION_SERVICE    = {
     "name": '/impedance_controller/set_final_position_rad',
-    "msg_type": SetFloat64
+    "msg_type": SetFloat64MultiArray
 }
 SET_PLANNER_ENABLED_SERVICE = {
     "name": '/impedance_controller/set_planner_enabled',
@@ -117,8 +117,8 @@ class DummyPlannerNode(Node):
         )
         # Services
         self.desired_final_position_service_ = self.create_service(
-            SET_DESIRED_FINAL_POSITION_TOPIC["msg_type"],
-            SET_DESIRED_FINAL_POSITION_TOPIC["name"],
+            SET_DESIRED_FINAL_POSITION_SERVICE["msg_type"],
+            SET_DESIRED_FINAL_POSITION_SERVICE["name"],
             self.desired_final_position_callback
         )
         self.planner_enabled_service_ = self.create_service(
@@ -141,8 +141,8 @@ class DummyPlannerNode(Node):
     def measured_initial_position_callback(self, msg):
         """Callback function for receiving and storing the measured initial position from the encoders.
         
-        Turns the received message into a numpy array and stores it in the class variable
-        `measured_initial_position_`.
+        Turns the received message from `SUBSCRIBE_MEASURED_INITIAL_POSITION_TOPIC` into a numpy array
+        and stores it in the class variable `measured_initial_position_`.
 
         Parameters
         ----------
@@ -155,11 +155,11 @@ class DummyPlannerNode(Node):
         """Callback function for receiving the desired final position, calculating the trajectory, and
         storing it for execution.
 
-        Turns the received desired final position into a numpy array and stores it in the class variable
-        `desired_final_position_`. If the measured initial position has already been received, it calculates
-        the trajectory with a trapezoidal velocity profile from the measured initial position to the desired
-        final position, samples the trajectory at the control loop frequency, and stores it in the class
-        variable `trajectory_`.
+        Turns the received desired final position from the `SET_DESIRED_FINAL_POSITION_SERVICE` request into
+        a numpy array and stores it in the class variable `desired_final_position_`. If the measured initial
+        position has already been received, it calculates the trajectory with a trapezoidal velocity profile
+        from the measured initial position to the desired final position, samples the trajectory at the
+        control loop frequency, and stores it in the class variable `trajectory_`.
 
         Parameters
         ----------
@@ -198,8 +198,9 @@ class DummyPlannerNode(Node):
     def planner_enabled_callback(self, request, response):
         """Callback function for enabling or disabling the planner.
 
-        Turns the received boolean into a flag for enabling or disabling the
-        planner and stores it in the class variable `planner_enabled_`.
+        Turns the received boolean from `SET_PLANNER_ENABLED_SERVICE` into a flag
+        for enabling or disabling the planner and stores it in the class variable
+        `planner_enabled_`.
 
         Parameters
         ----------
@@ -227,23 +228,23 @@ class DummyPlannerNode(Node):
 
     def timer_callback(self):
         """Callback function for publishing the desired position and velocity
-        references.
+        references to the impedance controller.
 
         If the planner is enabled and the trajectory has already been calculated,
         it formats the current position and velocity references from the trajectory
-        into ROS2 messages and publishes them to the impedance controller at the
-        control loop frequency. It also iterates through the trajectory by increasing
-        the index for the next references. If the end of the trajectory is reached,
-        it logs that the trajectory execution is completed, disables the planner,
-        resets the trajectory ready flag, and resets the trajectory index for the next
-        execution.
+        into ROS2 messages and publishes them to `PUBLISH_DESIRED_POSITION_TOPIC` and
+        `PUBLISH_DESIRED_VELOCITY_TOPIC` at the control loop frequency. It also iterates
+        through the trajectory by increasing the index for the next references. If the
+        end of the trajectory is reached, it logs that the trajectory execution is
+        completed, disables the planner, resets the trajectory ready flag, and resets
+        the trajectory index for the next execution.
         """
         if self.planner_enabled_ and self.trajectory_ready_:
             desired_position_msg = Float64MultiArray()
             desired_velocity_msg = Float32MultiArray()
             # Format ROS messages
-            desired_position_msg.data = self.trajectory_.q[self.trajectory_index_, :]
-            desired_velocity_msg.data = self.trajectory_.qd[self.trajectory_index_, :]
+            desired_position_msg.data = self.trajectory_.q[self.trajectory_index_, :].tolist()
+            desired_velocity_msg.data = self.trajectory_.qd[self.trajectory_index_, :].tolist()
             # Publish ROS messages and increment trajectory index for next run
             self.desired_position_publisher_.publish(desired_position_msg)
             self.desired_velocity_publisher_.publish(desired_velocity_msg)

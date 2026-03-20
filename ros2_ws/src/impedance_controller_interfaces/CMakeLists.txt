@@ -10,7 +10,9 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/SetFloat64.srv"
+  "srv/SetFloat64MultiArray.srv"
   "srv/SetFloat32.srv"
+  "srv/SetFloat32MultiArray.srv"
 )
 
 ament_export_dependencies(rosidl_default_runtime)
