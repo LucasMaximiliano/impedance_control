@@ -1,7 +1,81 @@
 {
   "configById": {
-    "CallService!3u0xy6t": {
+    "CallService!2lls7tw": {
       "requestPayload": "{\n  \"data\": true\n}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/impedance_controller/set_planner_enabled"
+    },
+    "CallService!1kbdqs2": {
+      "requestPayload": "{\n  \"data\": [0.0, 0.0]\n \n}",
+      "layout": "vertical",
+      "timeoutSeconds": 10,
+      "serviceName": "/impedance_controller/set_final_position_rad"
+    },
+    "Plot!o3xnqx": {
+      "xAxisVal": "timestamp",
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/impedance_controller/set_position_rad.data[0]",
+          "enabled": true,
+          "color": "#4e98e2",
+          "id": "b0e0f809-d990-4d52-bccf-90b4cba7a0f2",
+          "label": "Shoulder 1 Position Set-Point in rad"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/impedance_controller/set_position_rad.data[1]",
+          "enabled": true,
+          "color": "#f5774d",
+          "id": "def39cca-e08e-4868-85c4-9a40b3eccecb",
+          "label": "Elbow 1 Position Set-Point in rad"
+        }
+      ],
+      "showLegend": true
+    },
+    "Plot!2h83teb": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/impedance_controller/set_velocity_rad_per_sec.data[0]",
+          "enabled": true,
+          "color": "#4e98e2",
+          "id": "62127255-cd1d-4946-be6a-3a2d86e94fb7",
+          "label": "Shoulder 1 Velocity Set-Point in rad/s"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/impedance_controller/set_velocity_rad_per_sec.data[1]",
+          "enabled": true,
+          "color": "#f5774d",
+          "id": "ddb4be92-3415-401f-8f88-f65234d68fa8",
+          "label": "Elbow 1 Velocity Set-Point in rad/s"
+        }
+      ]
+    },
+    "Plot!1sx21b4": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/command/set_torque_nm.data[0]",
+          "enabled": true,
+          "color": "#4e98e2",
+          "id": "6d8ee68c-700d-479f-8e43-34dd4662e176",
+          "label": "Shoulder 1 Torque Command in Nm"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/command/set_torque_nm.data[1]",
+          "enabled": true,
+          "color": "#f5774d",
+          "id": "147cab17-b8cb-4901-aeb6-48477462faa9",
+          "label": "Elbow 1 Torque Command in Nm"
+        }
+      ]
+    },
+    "CallService!3u0xy6t": {
+      "requestPayload": "{\n  \"data\": false\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/combined_control_enabled"
@@ -42,54 +116,30 @@
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_torque_gain"
     },
-    "CallService!2lls7tw": {
-      "requestPayload": "{\n  \"data\": true\n}",
-      "layout": "vertical",
-      "timeoutSeconds": 10,
-      "serviceName": "/impedance_controller/set_planner_enabled"
-    },
-    "CallService!1kbdqs2": {
-      "requestPayload": "{\n  \"data\": [0.0, 0.0]\n}",
-      "layout": "vertical",
-      "timeoutSeconds": 10,
-      "serviceName": "/impedance_controller/set_final_position_rad"
-    },
-    "Plot!o3xnqx": {
-      "xAxisVal": "timestamp",
-      "paths": [
-        {
-          "timestampMethod": "receiveTime",
-          "value": "/impedance_controller/set_position_rad.data[:]",
-          "enabled": true,
-          "color": "#4e98e2",
-          "id": "b0e0f809-d990-4d52-bccf-90b4cba7a0f2"
-        }
-      ]
-    },
-    "Plot!2h83teb": {
-      "paths": [
-        {
-          "timestampMethod": "receiveTime",
-          "value": "/impedance_controller/set_velocity_rad_per_sec.data[:]",
-          "enabled": true,
-          "color": "#4e98e2",
-          "id": "62127255-cd1d-4946-be6a-3a2d86e94fb7"
-        }
-      ]
-    },
-    "Plot!1sx21b4": {
-      "paths": [
-        {
-          "timestampMethod": "receiveTime",
-          "value": "/command/set_torque_nm.data[:]",
-          "enabled": true,
-          "color": "#4e98e2",
-          "id": "6d8ee68c-700d-479f-8e43-34dd4662e176"
-        }
-      ]
-    },
     "Tab!1f1y1hu": {
       "tabs": [
+        {
+          "title": "Planner",
+          "layout": {
+            "first": {
+              "first": "CallService!2lls7tw",
+              "second": "CallService!1kbdqs2",
+              "direction": "column"
+            },
+            "second": {
+              "first": "Plot!o3xnqx",
+              "second": {
+                "first": "Plot!2h83teb",
+                "second": "Plot!1sx21b4",
+                "direction": "column"
+              },
+              "direction": "column",
+              "splitPercentage": 32.01554152501214
+            },
+            "direction": "row",
+            "splitPercentage": 50
+          }
+        },
         {
           "title": "Controller",
           "layout": {
@@ -117,27 +167,6 @@
             },
             "direction": "row",
             "splitPercentage": 50.08319467554077
-          }
-        },
-        {
-          "title": "Planner",
-          "layout": {
-            "first": {
-              "first": "CallService!2lls7tw",
-              "second": "CallService!1kbdqs2",
-              "direction": "column"
-            },
-            "second": {
-              "first": "Plot!o3xnqx",
-              "second": {
-                "first": "Plot!2h83teb",
-                "second": "Plot!1sx21b4",
-                "direction": "column"
-              },
-              "direction": "column",
-              "splitPercentage": 32.01554152501214
-            },
-            "direction": "row"
           }
         }
       ],
