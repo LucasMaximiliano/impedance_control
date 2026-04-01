@@ -1,0 +1,15 @@
+%YAML 1.2
+---
+launch:
+  - node:
+      pkg: "dummy_planner"
+      exec: "dummy_planner_node"
+      name: "dummy_planner"
+
+  - node:
+      pkg: "impedance_controller"
+      exec: "impedance_controller_node"
+      name: "impedance_controller"
+
+  - include:
+      file: "$(find-pkg-share foxglove_bridge)/launch/foxglove_bridge_launch.xml"
