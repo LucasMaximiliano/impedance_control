@@ -59,6 +59,14 @@ class DummyPlannerNode(Node):
     ----------
     planner_enabled_ : bool
         a flag indicating whether the planner is enabled or not.
+    measeured_initial_position_1_ : numpy.ndarray
+        a list storing the measured initial position from the encoders for finger 1.
+    measeured_initial_position_2_ : numpy.ndarray
+        a list storing the measured initial position from the encoders for finger 2.
+    measeured_initial_position_3_ : numpy.ndarray
+        a list storing the measured initial position from the encoders for finger 3.
+    measeured_initial_position_4_ : numpy.ndarray
+        a list storing the measured initial position from the encoders for finger 4.
     trajectory_ready_1_ : bool
         a flag indicating whether the trajectory for finger 1 has been calculated and is ready for execution.
     trajectory_ready_2_ : bool
@@ -116,6 +124,10 @@ class DummyPlannerNode(Node):
         self.get_logger().info('Dummy Planner Node has been started.')
         # Variables
         self.planner_enabled_ = False
+        self.measured_initial_position_1_ = None
+        self.measured_initial_position_2_ = None
+        self.measured_initial_position_3_ = None
+        self.measured_initial_position_4_ = None
         self.trajectory_ready_1_ = False
         self.trajectory_ready_2_ = False
         self.trajectory_ready_3_ = False
@@ -165,10 +177,18 @@ class DummyPlannerNode(Node):
         msg : std_msgs.msg.Float64MultiArray
             the message containing the measured initial position from the encoders.
         """
-        self.measured_initial_position_1_ = np.array(msg.data[0:2])
-        self.measured_initial_position_2_ = np.array(msg.data[2:4])
-        self.measured_initial_position_3_ = np.array(msg.data[4:6])
-        self.measured_initial_position_4_ = np.array(msg.data[6:8])
+        if len(msg.data) != 8:
+            self.get_logger().warn(f"Received measured initial position with incorrect length: {len(msg.data)}.' \
+                                   Expected length is 8. Setting measured initial position to None.")
+            self.measured_initial_position_1_ = None
+            self.measured_initial_position_2_ = None
+            self.measured_initial_position_3_ = None
+            self.measured_initial_position_4_ = None
+        else:
+            self.measured_initial_position_1_ = np.array(msg.data[0:2])
+            self.measured_initial_position_2_ = np.array(msg.data[2:4])
+            self.measured_initial_position_3_ = np.array(msg.data[4:6])
+            self.measured_initial_position_4_ = np.array(msg.data[6:8])
 
     def desired_final_position_callback(self, request, response):
         """Callback function for receiving the desired final position, calculating the trajectory, and
@@ -195,13 +215,16 @@ class DummyPlannerNode(Node):
             the response containing a success flag and a message indicating the result of the operation.
         """
         self.desired_final_position_ = np.array(request.data)
-        if (hasattr(self, 'measured_initial_position_1_') and
-            hasattr(self, 'measured_initial_position_2_') and
-            hasattr(self, 'measured_initial_position_3_') and
-            hasattr(self, 'measured_initial_position_4_')):
-            self.get_logger().info('Received desired final position: ' + str(self.desired_final_position_) +
-                ' rad. Calculating trajectory from measured initial position: ' + str(self.measured_initial_position_) +
-                ' rad.')
+        if (self.measured_initial_position_1_ is not None and
+            self.measured_initial_position_2_ is not None and
+            self.measured_initial_position_3_ is not None and
+            self.measured_initial_position_4_ is not None):
+            self.get_logger().info(f"Received desired final position {self.desired_final_position_} rad. ")
+            for i in range(1,5):
+                initial_pos = getattr(self, f'measured_initial_position_{i}_')
+                self.get_logger().info(
+                    f"Calculating trajectory from measured initial position: {i}: {initial_pos} rad."
+                )
             # Generate a trajectory with trapezoidal velocity profile  for each finger (sampled at the control loop frequency)
             trajectory_duration_sec = ( (MAX_JOINT_ACCELERATION_RAD_PER_SEC_SQ + MAX_JOINT_VELOCITY_RAD_PER_SEC**2) /
                 (MAX_JOINT_ACCELERATION_RAD_PER_SEC_SQ * MAX_JOINT_VELOCITY_RAD_PER_SEC) )
@@ -291,8 +314,10 @@ class DummyPlannerNode(Node):
             # Check if end of trajectory is reached and reset variables if so
             if self.trajectory_index_ >= self.trajectory_1_.__len__():
                 self.get_logger().info('Trajectory execution completed.')
-                self.planner_enabled_ = False
-                self.trajectory_ready_ = False
+                self.trajectory_ready_1_ = False
+                self.trajectory_ready_2_ = False
+                self.trajectory_ready_3_ = False
+                self.trajectory_ready_4_ = False
                 self.trajectory_index_ = 0
 
 def main():
