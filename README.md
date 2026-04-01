@@ -66,7 +66,7 @@ Once you're satisfied with your work, leave the container **first** and perform 
 
 ## Usage
 ### Configuration
-To configure the impedance controller, modify the initialization parameters in the `config.toml` file located in the `impedance_controller/` package directory. Additionally, the following parameters can be updated dynamically at runtime, either via a [GUI](#visualization) or through ROS2 service calls: 
+To configure the impedance controller, modify the initialization parameters in the `config.toml` file located in the `impedance_controller/` package directory. Additionally, the following parameters can be updated dynamically at runtime, either via a [GUI](#gui) or through ROS2 service calls: 
 - virtual stiffness matrix,
 - virtual damping matrix,
 - virtual inertia matrix, and
@@ -75,7 +75,7 @@ To configure the impedance controller, modify the initialization parameters in t
 > [!NOTE]
 > The setters for the matrices take a scalar value and set the corresponding matrix to a scaled identity matrix. This is a common approach for tuning the controller with a single gain parameter. However, the software can be easily extended to allow setting full matrices, if needed.
 
-### Build & Run
+### Build
 To build the ROS2 workspace, run
 ``` bash
 cd ros2_ws
@@ -84,13 +84,18 @@ colcon build --symlink-install
 ```
 The `--symlink-install` flag creates symbolic links to the source files instead of copying them during build. That means that changes to the source code will be reflected immediately without the need to rebuild the workspace. This is especially useful when adjusting the initialization parameters in the `config.toml` file.
 
-After that, source the ROS2 workspace with
+### Run individual nodes
+After building the code, source the ROS2 workspace with
 ``` bash
 source install/setup.bash
 ```
-and execute the application with
+and execute the impedance controller application with
 ``` bash
 ros2 run impedance_controller impedance_controller_node
+```
+It is also possible to run the dummy planner node individually, as shown below. Look [here](#hardware-tests) for more details on this node.
+``` bash
+ros2 run dummy_planner dummy_planner_node
 ```
 
 ### Testing
@@ -121,9 +126,18 @@ The `--verbose` flag is optional and provides more detailed output. This will ge
 > ``` bash
 > env | grep -E 'FASTRTPS_DEFAULT_PROFILES_FILE|ROS_DISCOVERY_SERVER'
 > ```
+### Hardware tests
+To test the impedance controller in the real system, a small ROS2 package called `dummy_planner` was written to simulate the planner node and provide meaningful trajectories for the controller. It leverages trapezoidal velocity profiles to generate smooth trajectories from the current position of the fingers to a desired final position. The generated trajectories are published to the controller at a fixed rate of 100 Hz, which is the same rate at which the controller operates.
 
-## Visualization
-Foxglove is a third-party software tool to interact with ROS2 data. It can handle recorded data e.g. via ROS bags or real time data from ROS interfaces (topics, services, actions). Here are the steps to use the impedance controller together with Foxglove:
+For convenience, a launch file is provided to start both the impedance controller and the dummy planner, as well as the foxglove bridge for visualization (check [this section](#gui) for more on foxglove).
+``` bash
+cd ros2_ws/launch
+ros2 launch test_launch.yaml
+```
+
+## GUI
+### Foxglove installation
+Foxglove is a third-party software tool to interact with ROS2 data. It can handle recorded data e.g. via ROS bags or real time data from ROS interfaces (topics, services, actions). Here are the steps to use the impedance controller GUI based on Foxglove:
 1. Install [Foxglove Studio](https://foxglove.dev/download/) on the host machine. If for some reason you can't install it, you can also use the [web version](https://studio.foxglove.dev/).
 2. Go to the "Layouts" section, click on the "Add" button and select "Import Layout from File". Then, select the `impedance_controller/foxglove_layout.json` file.
 3. Inside the docker container, start the ROS2 impedance controller node as described in the [Build & Run](#build--run) section.
@@ -134,6 +148,45 @@ ros2 launch foxglove_bridge foxglove_bridge_launch.xml
 5. Go back to Foxglove Studio and add a new ROS2 connection by clicking on the "Open connection" button in the "Data sources" panel.
 6. Select the websocket option and set the URL to `ws://localhost:8765`. If you're using Foxglove Studio from another device, replace `localhost` with the IP address of the host machine. For example, if the local host is the Zotac and you're using Foxglove Studio on your laptop, the URL should be `ws://192.168.2.95:8765`, where `192.168.2.95` is the IP address of the Zotac.
 7. Click on "Connect" to start receiving data from the impedance controller node.
+### Visualization & Interaction
+The provided Foxglove layout includes several panels to visualize the operation of the impedance controller and the dummy planner. It is meant **primarily** for testing and tunning of the controller, but it can also be used for monitoring the controller during deployment. The layout includes:
+1. Planner tab
+    - Call service `/impedance_controller/set_planner_enabled`: Enables the dummy planner to start publishing trajectories to the controller in case a desired position is provided to `/impedance_controller/set_final_position_rad`.
+    - Call service `/impedance_controller/set_final_position_rad`: Sets the desired final position of the finger joints in radians. This is used by the dummy planner to generate trajectories for the controller. The expected input is a list of 2 values corresponding to the desired final position of the shoulder and elbow joints for **all fingers**, in radians.
+    - Plot of `/impedance_controller/set_position_rad`: Shows the position trajectory being published by the dummy planner to the controller. To avoid clutter, only the shoulder and elbow joint positions of the first finger are plotted, but similar trajectories are published for all fingers (given that they started from the same configuration).
+    - Plot of `/impedance_controller/set_velocity_rad_per_sec`: Shows the velocity trajectory being published by the dummy planner to the controller. To avoid clutter, only the shoulder and elbow joint velocities of the first finger are plotted, but similar trajectories are published for all fingers (given that they started from the same configuration).
+    - Plot of `/command/set_torque_nm`: Shows the torque commands being published by the impedance controller to the motors (if enabled in the controller tab). To avoid clutter, only the shoulder and elbow joint torques of the first finger are plotted, but similar values are published for all fingers (given that they started from the same configuration).
+2. Controller tab
+    - Call service `/impedance_controller/combined_control_enabled`: Connects the controller to the motor drivers i.e. enables the controller to publish torque commands to the motors. This is the main "enable" switch for the controller, and it should be turned on only when the controller is properly tuned and ready to be deployed.
+    - Call service `/impedance_controller/impedance_control_enabled`: Adds the impedance torque component to the controller output. This can be used to decouple the impedance control from the gravity compensation during testing.
+    - Call service `/impedance_controller/gravity_compensation_enabled`: Adds the gravity compensation torque component to the controller output. This can be used to decouple the impedance control from the gravity compensation during testing.
+    - Call service `/impedance_controller/set_inertia_gain`: Sets the virtual inertia gain of the controller. This is a scalar value that scales the identity matrix to create the virtual inertia matrix.
+    - Call service `/impedance_controller/set_damping_gain`: Sets the virtual damping gain of the controller. This is a scalar value that scales the identity matrix to create the virtual damping matrix.
+    - Call service `/impedance_controller/set_stiffness_gain`: Sets the virtual stiffness gain of the controller. This is a scalar value that scales the identity matrix to create the virtual stiffness matrix.
+    - Call service `/impedance_controller/set_torque_gain`: Sets the torque gain of the controller.
+
+<p align="center">
+  <img src="docs/images/gui_planner_tab.png" alt="Screenshot of the GUI Planner tab" width="700"/>
+</p>
+
+<p align="center">
+  <img src="docs/images/gui_controller_tab.png" alt="Screenshot of the GUI Controller tab" width="700"/>
+</p>
+
+### Typical workflow
+A typical workflow for testing and tuning the impedance controller using the provided GUI is as follows:
+1. Define a reasonable set of initial parameters in the `config.toml` file. This will be used as the starting point for tuning the controller.
+2. Make sure that the parameters in the dummy planner align with the initial parameters in the `config.toml` file.
+3. Launch the impedance controller and dummy planner using the provided launch file, as described [above](#hardware-tests). This will start the ROS2 nodes and the foxglove bridge for visualization.
+4. Open the main GUI for grasping control, as specified in [Notion](https://www.notion.so/Launch-documentation-254c83f6d90880e5a549da8c06db0dab?source=copy_link#265c83f6d9088073b2cbc1ba81526a16). You will need to enable torque control for the motors.
+5. Navigate to the planner tab in the foxglove GUI and enable the planner.
+6. Navigate to the controller tab in the foxglove GUI and enable the torque components that you want to test, e.g., gravity compensation, impedance control, etc.
+7. Still in the controller tab, enable the combined control to start sending messages to the motors.
+8. Navigate back to the planner tab and set a desired final position for the fingers. This will trigger the dummy planner to generate trajectories for the controller, which will start moving the fingers accordingly.
+9. Adjust the impedance control parameters in the controller tab and repeat the earlier steps to tune the controller and achieve the desired impedance behaviour.
+
+> [!WARNING]
+> When tuning the impedance controller, always be cautious and have the emergency stop button readily available in the main GUI.
 
 ## Documentation
 ### Doxygen
