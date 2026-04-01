@@ -16,7 +16,7 @@ SERVICE_TOPIC_3 = "/impedance_controller/set_inertia_gain"
 SERVICE_TOPIC_4 = "/impedance_controller/set_damping_gain"
 SERVICE_TOPIC_5 = "/impedance_controller/set_stiffness_gain"
 SERVICE_TOPIC_6 = "/impedance_controller/set_torque_gain"
-TEST_TIMEOUT_SEC = 100.0
+TEST_TIMEOUT_SEC = 5.0
 
 def generate_test_description():
     """Generate the launch description for integration tests."""
@@ -60,6 +60,7 @@ class TestImpedanceController(unittest.TestCase):
         try:
             srv = self.node.create_client(
                 std_srvs.srv.SetBool, SERVICE_TOPIC_0)
+            srv.wait_for_service(timeout_sec=TEST_TIMEOUT_SEC)
             # request combined control enabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=True))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
@@ -80,6 +81,7 @@ class TestImpedanceController(unittest.TestCase):
         try:
             srv = self.node.create_client(
                 std_srvs.srv.SetBool, SERVICE_TOPIC_1)
+            srv.wait_for_service(timeout_sec=TEST_TIMEOUT_SEC)
             # request gravity compensation enabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=True))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
@@ -100,6 +102,7 @@ class TestImpedanceController(unittest.TestCase):
         try:
             srv = self.node.create_client(
                 std_srvs.srv.SetBool, SERVICE_TOPIC_2)
+            srv.wait_for_service(timeout_sec=TEST_TIMEOUT_SEC)
             # request impedance control enabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=True))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
@@ -119,9 +122,10 @@ class TestImpedanceController(unittest.TestCase):
         """Check whether inertia gain is correctly set."""
         try:
             srv = self.node.create_client(
-                impedance_controller_interfaces.srv.SetGain, SERVICE_TOPIC_3)
+                impedance_controller_interfaces.srv.SetFloat64, SERVICE_TOPIC_3)
+            srv.wait_for_service(timeout_sec=TEST_TIMEOUT_SEC)
             # request inertia gain update
-            future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=5.0))
+            future = srv.call_async(impedance_controller_interfaces.srv.SetFloat64.Request(data=5.0))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
             assert future.result() is not None
             assert future.result().success
@@ -133,9 +137,10 @@ class TestImpedanceController(unittest.TestCase):
         """Check whether damping gain is correctly set."""
         try:
             srv = self.node.create_client(
-                impedance_controller_interfaces.srv.SetGain, SERVICE_TOPIC_4)
+                impedance_controller_interfaces.srv.SetFloat64, SERVICE_TOPIC_4)
+            srv.wait_for_service(timeout_sec=TEST_TIMEOUT_SEC)
             # request damping gain update
-            future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=5.0))
+            future = srv.call_async(impedance_controller_interfaces.srv.SetFloat64.Request(data=5.0))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
             assert future.result() is not None
             assert future.result().success
@@ -147,9 +152,10 @@ class TestImpedanceController(unittest.TestCase):
         """Check whether stiffness gain is correctly set."""
         try:
             srv = self.node.create_client(
-                impedance_controller_interfaces.srv.SetGain, SERVICE_TOPIC_5)
+                impedance_controller_interfaces.srv.SetFloat64, SERVICE_TOPIC_5)
+            srv.wait_for_service(timeout_sec=TEST_TIMEOUT_SEC)
             # request stiffness gain update
-            future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=5.0))
+            future = srv.call_async(impedance_controller_interfaces.srv.SetFloat64.Request(data=5.0))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
             assert future.result() is not None
             assert future.result().success
@@ -161,9 +167,10 @@ class TestImpedanceController(unittest.TestCase):
         """Check whether torque gain is correctly set."""
         try:
             srv = self.node.create_client(
-                impedance_controller_interfaces.srv.SetGain, SERVICE_TOPIC_6)
+                impedance_controller_interfaces.srv.SetFloat64, SERVICE_TOPIC_6)
+            srv.wait_for_service(timeout_sec=TEST_TIMEOUT_SEC)
             # request torque gain update
-            future = srv.call_async(impedance_controller_interfaces.srv.SetGain.Request(gain=0.5))
+            future = srv.call_async(impedance_controller_interfaces.srv.SetFloat64.Request(data=0.5))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
             assert future.result() is not None
             assert future.result().success

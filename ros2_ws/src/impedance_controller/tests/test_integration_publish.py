@@ -1,6 +1,5 @@
 """Integration tests for publishing torque output of the impedance_controller ROS 2 node."""
 
-import os
 import time
 import unittest
 
@@ -13,7 +12,7 @@ import std_srvs.srv
 
 SERVICE_TOPIC = "/impedance_controller/combined_control_enabled"
 OUTPUT_TOPIC = "/command/set_torque_nm"
-TEST_TIMEOUT_SEC = 10.0
+TEST_TIMEOUT_SEC = 5.0
 SPIN_TIMEOUT_SEC = 0.05
 MIN_MSGS = 5
 
@@ -63,10 +62,13 @@ class TestImpedanceController(unittest.TestCase):
         srv = self.node.create_client(
                 std_srvs.srv.SetBool, SERVICE_TOPIC)
         try:
+            srv.wait_for_service(timeout_sec=TEST_TIMEOUT_SEC)
             # Request combined control enabled
             future = srv.call_async(std_srvs.srv.SetBool.Request(data=True))
             rclpy.spin_until_future_complete(self.node, future, timeout_sec=TEST_TIMEOUT_SEC)
-            assert future.result() is not None and future.result().success and future.result().message == "Combined control enabled"
+            assert future.result() is not None
+            assert future.result().success
+            assert future.result().message == "Combined control enabled"
             # Listen to the torque topic for TEST_TIMEOUT_SEC seconds
             end_time = time.time() + TEST_TIMEOUT_SEC
             while time.time() < end_time and len(msgs_rx) < MIN_MSGS:

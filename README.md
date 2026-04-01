@@ -116,16 +116,6 @@ colcon test-result --all --verbose
 ```
 The `--verbose` flag is optional and provides more detailed output. This will generate a detailed report of the test results, including any failures or errors encountered during testing.
 
-> [!WARNING]
-> The transition to FastDDS has broken the integration tests. The quick fix is to disable FastDDS in the active shell before running the tests. To do that, unset the following environment variables:
-> ``` bash
-> unset FASTRTPS_DEFAULT_PROFILES_FILE
-> unset ROS_DISCOVERY_SERVER
-> ```
-> Verify that FastDDS is disabled by running the command below. It should not return any output:
-> ``` bash
-> env | grep -E 'FASTRTPS_DEFAULT_PROFILES_FILE|ROS_DISCOVERY_SERVER'
-> ```
 ### Hardware tests
 To test the impedance controller in the real system, a small ROS2 package called `dummy_planner` was written to simulate the planner node and provide meaningful trajectories for the controller. It leverages trapezoidal velocity profiles to generate smooth trajectories from the current position of the fingers to a desired final position. The generated trajectories are published to the controller at a fixed rate of 100 Hz, which is the same rate at which the controller operates.
 
