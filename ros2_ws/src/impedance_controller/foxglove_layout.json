@@ -1,13 +1,13 @@
 {
   "configById": {
     "CallService!2lls7tw": {
-      "requestPayload": "{\n  \"data\": true\n}",
+      "requestPayload": "{\n  \"data\": false\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_planner_enabled"
     },
     "CallService!1kbdqs2": {
-      "requestPayload": "{\n  \"data\": [0.0, 0.0]\n \n}",
+      "requestPayload": "{\n  \"data\": [2.5, -1.5]\n \n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_final_position_rad"
@@ -81,25 +81,25 @@
       "serviceName": "/impedance_controller/combined_control_enabled"
     },
     "CallService!2gksp5q": {
-      "requestPayload": "{\n  \"gain\": 0\n}",
+      "requestPayload": "{\n  \"data\": 0.0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_inertia_gain"
     },
     "CallService!1knn54d": {
-      "requestPayload": "{\n  \"gain\": 0\n}",
+      "requestPayload": "{\n  \"data\": 0.0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_damping_gain"
     },
     "CallService!49yogva": {
-      "requestPayload": "{\n  \"data\": true\n}",
+      "requestPayload": "{\n  \"data\": false\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/impedance_control_enabled"
     },
     "CallService!4g86mc0": {
-      "requestPayload": "{\n  \"gain\": 0\n}",
+      "requestPayload": "{\n  \"data\": 0.0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_stiffness_gain"
@@ -111,7 +111,7 @@
       "serviceName": "/impedance_controller/gravity_compensation_enabled"
     },
     "CallService!nql7xj": {
-      "requestPayload": "{\n  \"gain\": 0\n}",
+      "requestPayload": "{\n  \"data\": 0.0\n}",
       "layout": "vertical",
       "timeoutSeconds": 10,
       "serviceName": "/impedance_controller/set_torque_gain"
