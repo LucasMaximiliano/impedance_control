@@ -7,7 +7,7 @@
 // Macros for topic names, service names, and queue size
 #define QUEUE_SIZE 10
 
-#define PUBLISH_TORQUE_CMD_TOPIC "/command/set_torque_nm"
+#define PUBLISH_TORQUE_CMD_TOPIC "/command/set_advanced_torque_nm"
 
 #define SUBSCRIBE_MEASURED_POSITION_TOPIC "/senso_joint/position_rad"
 #define SUBSCRIBE_MEASURED_VELOCITY_TOPIC "/senso_joint/velocity_rad_per_sec"

@@ -58,7 +58,7 @@
       "paths": [
         {
           "timestampMethod": "receiveTime",
-          "value": "/command/set_torque_nm.data[0]",
+          "value": "/command/set_advanced_torque_nm.data[0]",
           "enabled": true,
           "color": "#4e98e2",
           "id": "6d8ee68c-700d-479f-8e43-34dd4662e176",
@@ -66,7 +66,7 @@
         },
         {
           "timestampMethod": "receiveTime",
-          "value": "/command/set_torque_nm.data[1]",
+          "value": "/command/set_advanced_torque_nm.data[1]",
           "enabled": true,
           "color": "#f5774d",
           "id": "147cab17-b8cb-4901-aeb6-48477462faa9",
