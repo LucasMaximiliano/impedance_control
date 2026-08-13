@@ -1,4 +1,4 @@
-> [!INFO]
+> [!NOTE]
 > This package is not under active development anymore, as new features have been frozen in preparation for the final demo in October 2026.
 
 # impedance_control
@@ -119,8 +119,7 @@ You can view the test results in the terminal with:
 colcon test-result --all --verbose
 ```
 The `--verbose` flag is optional and provides more detailed output. This will generate a detailed report of the test results, including any failures or errors encountered during testing.
-
-### Hardware tests
+#### Hardware tests
 To test the impedance controller in the real system, a small ROS2 package called `dummy_planner` was written to simulate the planner node and provide meaningful trajectories for the controller. It leverages trapezoidal velocity profiles to generate smooth trajectories from the current position of the fingers to a desired final position. The generated trajectories are published to the controller at a fixed rate of 100 Hz, which is the same rate at which the controller operates.
 
 For convenience, a launch file is provided to start both the impedance controller and the dummy planner, as well as the foxglove bridge for visualization (check [this section](#gui) for more on foxglove).
