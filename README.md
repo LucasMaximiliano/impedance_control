@@ -1,5 +1,5 @@
-> [!WARNING]
-> This package is still under development and not in a working state!
+> [!INFO]
+> This package is not under active development anymore, as new features have been frozen in preparation for the final demo in October 2026.
 
 # impedance_control
 This package provides an impedance controller for the robot fingers in the SeaClear2.0 grapple. It consists of a base C++ library and a ROS2 wrapper for ease of integration with the rest of the system. A Docker container with all necessary dependencies is provided for plug-and-play deployment.
